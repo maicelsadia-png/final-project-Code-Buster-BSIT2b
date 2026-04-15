@@ -105,6 +105,6 @@ Minimal but expressive layout
 
 ---
 
-✨ Closing
+✨ Closing 
 
 > QuickServe isn’t just a system—it’s a smarter way to order.
