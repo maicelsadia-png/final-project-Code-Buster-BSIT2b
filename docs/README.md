@@ -6,7 +6,7 @@
 ---
 
 
-👨‍💻 Developers
+👨‍💻 Developers 
 
 Samuel L. Gonzales
 
