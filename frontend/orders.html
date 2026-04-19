@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickServe | My Orders</title>
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-mug-hot me-2"></i>
+                <span>QuickServe</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">
+                            <i class="fas fa-shopping-cart"></i> Cart
+                            <span class="cart-badge">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> John Doe
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="dashboard.html">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                            <li><a class="dropdown-item" href="orders.html">My Orders</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="login.html">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Orders Section -->
+    <section class="orders-section">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="text-center mb-5">
+                <h1 class="page-title">My Orders</h1>
+                <p class="page-subtitle">Track and manage your order history</p>
+            </div>
+
+            <!-- Order Status Tabs -->
+            <ul class="nav nav-tabs order-tabs mb-4" id="orderTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="all-tab" data-bs-toggle="tab" data-bs-target="#all" type="button" role="tab">
+                        All Orders
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pending-tab" data-bs-toggle="tab" data-bs-target="#pending" type="button" role="tab">
+                        Pending
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="shipped-tab" data-bs-toggle="tab" data-bs-target="#shipped" type="button" role="tab">
+                        Shipped
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="delivered-tab" data-bs-toggle="tab" data-bs-target="#delivered" type="button" role="tab">
+                        Delivered
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="cancelled-tab" data-bs-toggle="tab" data-bs-target="#cancelled" type="button" role="tab">
+                        Cancelled
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="orderTabContent">
+                <!-- All Orders Tab -->
+                <div class="tab-pane fade show active" id="all" role="tabpanel">
+                    <!-- Order Card 1 -->
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <span class="order-number">Order #QS-2024-001</span>
+                                <span class="order-date"><i class="far fa-calendar-alt me-1"></i>March 25, 2026</span>
+                            </div>
+                            <div class="order-status">
+                                <span class="badge-delivered">Delivered</span>
+                            </div>
+                        </div>
+                        <div class="order-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <img src="img/products/Signature-Coffee.jpg" alt="Signature Coffee" class="order-item-img">
+                                            <div class="order-item-details">
+                                                <h6>Signature Coffee</h6>
+                                                <p>Quantity: 2 | ₱149.00 each</p>
+                                            </div>
+                                        </div>
+                                        <div class="order-item">
+                                            <img src="img/products/Gourmet-Burger.jpg" alt="Gourmet Burger" class="order-item-img">
+                                            <div class="order-item-details">
+                                                <h6>Gourmet Burger</h6>
+                                                <p>Quantity: 1 | ₱249.00 each</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="order-summary">
+                                        <p><strong>Total Amount:</strong> ₱547.00</p>
+                                        <p><strong>Payment Method:</strong> Cash on Delivery</p>
+                                        <div class="order-actions">
+                                            <a href="product-details.html" class="btn btn-sm btn-outline">Reorder</a>
+                                            <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#trackModal1">Track Order</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Card 2 -->
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <span class="order-number">Order #QS-2024-002</span>
+                                <span class="order-date"><i class="far fa-calendar-alt me-1"></i>March 22, 2026</span>
+                            </div>
+                            <div class="order-status">
+                                <span class="badge-shipped">Shipped</span>
+                            </div>
+                        </div>
+                        <div class="order-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <img src="img/products/Italian-Pizza.jpg" alt="Italian Pizza" class="order-item-img">
+                                            <div class="order-item-details">
+                                                <h6>Italian Pizza</h6>
+                                                <p>Quantity: 1 | ₱399.00 each</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="order-summary">
+                                        <p><strong>Total Amount:</strong> ₱399.00</p>
+                                        <p><strong>Payment Method:</strong> Credit Card</p>
+                                        <div class="order-actions">
+                                            <a href="product-details.html" class="btn btn-sm btn-outline">Reorder</a>
+                                            <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#trackModal2">Track Order</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Card 3 -->
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <span class="order-number">Order #QS-2024-003</span>
+                                <span class="order-date"><i class="far fa-calendar-alt me-1"></i>March 20, 2026</span>
+                            </div>
+                            <div class="order-status">
+                                <span class="badge-pending">Pending</span>
+                            </div>
+                        </div>
+                        <div class="order-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <img src="img/products/Iced-Caramel-Macchiato.jpg" alt="Iced Caramel Macchiato" class="order-item-img">
+                                            <div class="order-item-details">
+                                                <h6>Iced Caramel Macchiato</h6>
+                                                <p>Quantity: 2 | ₱179.00 each</p>
+                                            </div>
+                                        </div>
+                                        <div class="order-item">
+                                            <img src="img/products/placeholder.jpg" alt="Chocolate Cake" class="order-item-img">
+                                            <div class="order-item-details">
+                                                <h6>Chocolate Cake</h6>
+                                                <p>Quantity: 1 | ₱129.00 each</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="order-summary">
+                                        <p><strong>Total Amount:</strong> ₱487.00</p>
+                                        <p><strong>Payment Method:</strong> GCash</p>
+                                        <div class="order-actions">
+                                            <a href="product-details.html" class="btn btn-sm btn-outline">Reorder</a>
+                                            <button class="btn btn-sm btn-danger cancel-order" data-order="QS-2024-003">Cancel Order</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Card 4 -->
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <span class="order-number">Order #QS-2024-004</span>
+                                <span class="order-date"><i class="far fa-calendar-alt me-1"></i>March 18, 2026</span>
+                            </div>
+                            <div class="order-status">
+                                <span class="badge-delivered">Delivered</span>
+                            </div>
+                        </div>
+                        <div class="order-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <img src="img/products/placeholder.jpg" alt="Matcha Latte" class="order-item-img">
+                                            <div class="order-item-details">
+                                                <h6>Matcha Latte</h6>
+                                                <p>Quantity: 1 | ₱159.00 each</p>
+                                            </div>
+                                        </div>
+                                        <div class="order-item">
+                                            <img src="img/products/placeholder.jpg" alt="French Fries" class="order-item-img">
+                                            <div class="order-item-details">
+                                                <h6>French Fries</h6>
+                                                <p>Quantity: 2 | ₱89.00 each</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="order-summary">
+                                        <p><strong>Total Amount:</strong> ₱337.00</p>
+                                        <p><strong>Payment Method:</strong> Cash on Delivery</p>
+                                        <div class="order-actions">
+                                            <a href="product-details.html" class="btn btn-sm btn-outline">Reorder</a>
+                                            <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#trackModal4">Track Order</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pending Tab -->
+                <div class="tab-pane fade" id="pending" role="tabpanel">
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <span class="order-number">Order #QS-2024-003</span>
+                                <span class="order-date"><i class="far fa-calendar-alt me-1"></i>March 20, 2026</span>
+                            </div>
+                            <div class="order-status">
+                                <span class="badge-pending">Pending</span>
+                            </div>
+                        </div>
+                        <div class="order-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <img src="img/products/Iced-Caramel-Macchiato.jpg" alt="Iced Caramel Macchiato" class="order-item-img">
+                                            <div class="order-item-details">
+                                                <h6>Iced Caramel Macchiato</h6>
+                                                <p>Quantity: 2 | ₱179.00 each</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="order-summary">
+                                        <p><strong>Total Amount:</strong> ₱358.00</p>
+                                        <p><strong>Payment Method:</strong> GCash</p>
+                                        <div class="order-actions">
+                                            <button class="btn btn-sm btn-danger cancel-order">Cancel Order</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipped Tab -->
+                <div class="tab-pane fade" id="shipped" role="tabpanel">
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <span class="order-number">Order #QS-2024-002</span>
+                                <span class="order-date"><i class="far fa-calendar-alt me-1"></i>March 22, 2026</span>
+                            </div>
+                            <div class="order-status">
+                                <span class="badge-shipped">Shipped</span>
+                            </div>
+                        </div>
+                        <div class="order-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <img src="img/products/Italian-Pizza.jpg" alt="Italian Pizza" class="order-item-img">
+                                            <div class="order-item-details">
+                                                <h6>Italian Pizza</h6>
+                                                <p>Quantity: 1 | ₱399.00 each</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="order-summary">
+                                        <p><strong>Total Amount:</strong> ₱399.00</p>
+                                        <p><strong>Payment Method:</strong> Credit Card</p>
+                                        <div class="order-actions">
+                                            <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#trackModal2">Track Order</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivered Tab -->
+                <div class="tab-pane fade" id="delivered" role="tabpanel">
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <span class="order-number">Order #QS-2024-001</span>
+                                <span class="order-date"><i class="far fa-calendar-alt me-1"></i>March 25, 2026</span>
+                            </div>
+                            <div class="order-status">
+                                <span class="badge-delivered">Delivered</span>
+                            </div>
+                        </div>
+                        <div class="order-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="order-items">
+                                        <div class="order-item">
+                                            <img src="img/products/Signature-Coffee.jpg" alt="Signature Coffee" class="order-item-img">
+                                            <div class="order-item-details">
+                                                <h6>Signature Coffee</h6>
+                                                <p>Quantity: 2 | ₱149.00 each</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="order-summary">
+                                        <p><strong>Total Amount:</strong> ₱298.00</p>
+                                        <p><strong>Payment Method:</strong> Cash on Delivery</p>
+                                        <div class="order-actions">
+                                            <a href="product-details.html" class="btn btn-sm btn-outline">Reorder</a>
+                                            <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#trackModal1">Track Order</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cancelled Tab -->
+                <div class="tab-pane fade" id="cancelled" role="tabpanel">
+                    <div class="text-center py-5">
+                        <i class="fas fa-box-open fa-3x mb-3"></i>
+                        <h4>No cancelled orders</h4>
+                        <p>You have no cancelled orders in your history.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Track Order Modal 1 -->
+    <div class="modal fade" id="trackModal1" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Track Order #QS-2024-001</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="tracking-timeline">
+                        <div class="tracking-step completed">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Order Placed</strong>
+                                <p>March 25, 2026 - 10:30 AM</p>
+                            </div>
+                        </div>
+                        <div class="tracking-step completed">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Order Confirmed</strong>
+                                <p>March 25, 2026 - 11:00 AM</p>
+                            </div>
+                        </div>
+                        <div class="tracking-step completed">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Out for Delivery</strong>
+                                <p>March 26, 2026 - 9:00 AM</p>
+                            </div>
+                        </div>
+                        <div class="tracking-step completed">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Delivered</strong>
+                                <p>March 26, 2026 - 2:30 PM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Track Order Modal 2 -->
+    <div class="modal fade" id="trackModal2" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Track Order #QS-2024-002</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="tracking-timeline">
+                        <div class="tracking-step completed">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Order Placed</strong>
+                                <p>March 22, 2026 - 2:15 PM</p>
+                            </div>
+                        </div>
+                        <div class="tracking-step completed">
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>Order Confirmed</strong>
+                                <p>March 22, 2026 - 2:45 PM</p>
+                            </div>
+                        </div>
+                        <div class="tracking-step active">
+                            <i class="fas fa-truck"></i>
+                            <div>
+                                <strong>Shipped</strong>
+                                <p>March 23, 2026 - 10:00 AM</p>
+                            </div>
+                        </div>
+                        <div class="tracking-step">
+                            <i class="far fa-circle"></i>
+                            <div>
+                                <strong>Out for Delivery</strong>
+                                <p>Pending</p>
+                            </div>
+                        </div>
+                        <div class="tracking-step">
+                            <i class="far fa-circle"></i>
+                            <div>
+                                <strong>Delivered</strong>
+                                <p>Pending</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-mug-hot me-2"></i>QuickServe</h5>
+                    <p>Fast. Smooth. Effortless ordering experience. Serving happiness with every order.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Account</h5>
+                    <ul>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="register.html">Register</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="orders.html">My Orders</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact Us</h5>
+                    <ul>
+                        <li><i class="fas fa-envelope me-2"></i> support@quickserve.com</li>
+                        <li><i class="fas fa-phone me-2"></i> +63 2 1234 5678</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 QuickServe Ordering System. All rights reserved.</p>
+                <p>IT 112 – Web Systems and Technologies | Group Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickServe | Our Products</title>
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        .filter-bar {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 2rem;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            z-index: 10;
+        }
+        
+        .search-box input {
+            padding-left: 40px;
+        }
+        
+        .products-section {
+            padding: 2rem 0 4rem;
+        }
+        
+        .page-header {
+            padding: 2rem 0 1rem;
+            background: linear-gradient(135deg, var(--cream) 0%, var(--golden-beige) 100%);
+            margin-bottom: 2rem;
+        }
+        
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--dark-gray);
+            margin-bottom: 0.5rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.1rem;
+            color: var(--gray);
+        }
+        
+        .product-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .product-buttons {
+            margin-top: auto;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .product-buttons .btn {
+            flex: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-bar .row > div {
+                margin-bottom: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-mug-hot me-2"></i>
+                <span>QuickServe</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="products.html">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cart.html">
+                            <i class="fas fa-shopping-cart"></i> Cart
+                            <span class="cart-badge">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown" id="userDropdownNav">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> <span id="userNameDisplay">Account</span>
+                        </a>
+                        <ul class="dropdown-menu" id="dropdownMenu">
+                            <!-- Dynamic content will be inserted here -->
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <div class="text-center">
+                <h1 class="page-title">Our Products</h1>
+                <p class="page-subtitle">Discover our delicious selection of freshly prepared items</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-section">
+        <div class="container">
+            <div class="filter-bar">
+                <div class="row g-3">
+                    <div class="col-12 col-md-5">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" class="form-control" placeholder="Search products...">
+                        </div>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <select id="categoryFilter" class="form-select">
+                            <option value="all">All Categories</option>
+                            <option value="coffee">Coffee & Beverages</option>
+                            <option value="food">Food & Meals</option>
+                            <option value="desserts">Desserts</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <select id="sortFilter" class="form-select">
+                            <option value="default">Sort by: Default</option>
+                            <option value="price-asc">Price: Low to High</option>
+                            <option value="price-desc">Price: High to Low</option>
+                            <option value="name">Name: A to Z</option>
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-1">
+                        <button class="btn btn-outline w-100" id="resetFilters">
+                            <i class="fas fa-redo"></i> Reset
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4" id="productsGrid">
+                <!-- Product Card 1 - Signature Coffee -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item" data-category="coffee" data-price="149" data-name="Signature Coffee">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="img/products/Signature-Coffee.jpg" alt="Signature Coffee" class="img-fluid">
+                        </div>
+                        <div class="product-body">
+                            <h5>Signature Coffee</h5>
+                            <p class="product-desc">Rich, aromatic blend to start your day right.</p>
+                            <div class="product-price">₱149.00</div>
+                            <div class="product-stock">In Stock: 45</div>
+                            <div class="product-buttons">
+                                <a href="product-details.html?id=1" class="btn btn-sm btn-outline">View Details</a>
+                                <button class="btn btn-sm btn-primary add-to-cart" data-product-id="1" data-product-name="Signature Coffee" data-product-price="149">
+                                    <i class="fas fa-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 2 - Gourmet Burger -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item" data-category="food" data-price="249" data-name="Gourmet Burger">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="img/products/Gourmet-Burger.jpg" alt="Gourmet Burger" class="img-fluid">
+                        </div>
+                        <div class="product-body">
+                            <h5>Gourmet Burger</h5>
+                            <p class="product-desc">Juicy patty with fresh ingredients and special sauce.</p>
+                            <div class="product-price">₱249.00</div>
+                            <div class="product-stock">In Stock: 32</div>
+                            <div class="product-buttons">
+                                <a href="product-details.html?id=2" class="btn btn-sm btn-outline">View Details</a>
+                                <button class="btn btn-sm btn-primary add-to-cart" data-product-id="2" data-product-name="Gourmet Burger" data-product-price="249">
+                                    <i class="fas fa-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 3 - Italian Pizza -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item" data-category="food" data-price="399" data-name="Italian Pizza">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="img/products/Italian-Pizza.jpg" alt="Italian Pizza" class="img-fluid">
+                        </div>
+                        <div class="product-body">
+                            <h5>Italian Pizza</h5>
+                            <p class="product-desc">Authentic taste with premium toppings and cheese.</p>
+                            <div class="product-price">₱399.00</div>
+                            <div class="product-stock">In Stock: 18</div>
+                            <div class="product-buttons">
+                                <a href="product-details.html?id=3" class="btn btn-sm btn-outline">View Details</a>
+                                <button class="btn btn-sm btn-primary add-to-cart" data-product-id="3" data-product-name="Italian Pizza" data-product-price="399">
+                                    <i class="fas fa-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 4 - Iced Caramel Macchiato -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item" data-category="coffee" data-price="179" data-name="Iced Caramel Macchiato">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="img/products/Iced-Caramel-Macchiato.jpg" alt="Iced Caramel Macchiato" class="img-fluid">
+                        </div>
+                        <div class="product-body">
+                            <h5>Iced Caramel Macchiato</h5>
+                            <p class="product-desc">Smooth espresso with caramel and milk over ice.</p>
+                            <div class="product-price">₱179.00</div>
+                            <div class="product-stock">In Stock: 28</div>
+                            <div class="product-buttons">
+                                <a href="product-details.html?id=4" class="btn btn-sm btn-outline">View Details</a>
+                                <button class="btn btn-sm btn-primary add-to-cart" data-product-id="4" data-product-name="Iced Caramel Macchiato" data-product-price="179">
+                                    <i class="fas fa-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 5 - Chocolate Cake -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item" data-category="desserts" data-price="129" data-name="Chocolate Cake">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="img/products/Chocolate-Cake.jpg" alt="Chocolate Cake" class="img-fluid">
+                        </div>
+                        <div class="product-body">
+                            <h5>Chocolate Cake</h5>
+                            <p class="product-desc">Rich, moist chocolate cake with creamy frosting.</p>
+                            <div class="product-price">₱129.00</div>
+                            <div class="product-stock">In Stock: 15</div>
+                            <div class="product-buttons">
+                                <a href="product-details.html?id=5" class="btn btn-sm btn-outline">View Details</a>
+                                <button class="btn btn-sm btn-primary add-to-cart" data-product-id="5" data-product-name="Chocolate Cake" data-product-price="129">
+                                    <i class="fas fa-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 6 - French Fries -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item" data-category="food" data-price="89" data-name="French Fries">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="img/products/French-Fries.jpg" alt="French Fries" class="img-fluid">
+                        </div>
+                        <div class="product-body">
+                            <h5>French Fries</h5>
+                            <p class="product-desc">Crispy golden fries served with dip.</p>
+                            <div class="product-price">₱89.00</div>
+                            <div class="product-stock">In Stock: 50</div>
+                            <div class="product-buttons">
+                                <a href="product-details.html?id=6" class="btn btn-sm btn-outline">View Details</a>
+                                <button class="btn btn-sm btn-primary add-to-cart" data-product-id="6" data-product-name="French Fries" data-product-price="89">
+                                    <i class="fas fa-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 7 - Matcha Latte -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item" data-category="coffee" data-price="159" data-name="Matcha Latte">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="img/products/Matcha-Latte.jpg" alt="Matcha Latte" class="img-fluid">
+                        </div>
+                        <div class="product-body">
+                            <h5>Matcha Latte</h5>
+                            <p class="product-desc">Premium Japanese matcha with steamed milk.</p>
+                            <div class="product-price">₱159.00</div>
+                            <div class="product-stock">In Stock: 22</div>
+                            <div class="product-buttons">
+                                <a href="product-details.html?id=7" class="btn btn-sm btn-outline">View Details</a>
+                                <button class="btn btn-sm btn-primary add-to-cart" data-product-id="7" data-product-name="Matcha Latte" data-product-price="159">
+                                    <i class="fas fa-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Product Card 8 - Cheesecake -->
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item" data-category="desserts" data-price="149" data-name="Cheesecake">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="img/products/Cheesecake.jpg" alt="Cheesecake" class="img-fluid">
+                        </div>
+                        <div class="product-body">
+                            <h5>Cheesecake</h5>
+                            <p class="product-desc">Creamy New York style cheesecake.</p>
+                            <div class="product-price">₱149.00</div>
+                            <div class="product-stock">In Stock: 12</div>
+                            <div class="product-buttons">
+                                <a href="product-details.html?id=8" class="btn btn-sm btn-outline">View Details</a>
+                                <button class="btn btn-sm btn-primary add-to-cart" data-product-id="8" data-product-name="Cheesecake" data-product-price="149">
+                                    <i class="fas fa-cart-plus"></i> Add
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="noResults" class="text-center py-5 d-none">
+                <i class="fas fa-search fa-3x mb-3"></i>
+                <h4>No products found</h4>
+                <p>Try adjusting your search or filter criteria</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-mug-hot me-2"></i>QuickServe</h5>
+                    <p>Fast. Smooth. Effortless ordering experience. Serving happiness with every order.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Account</h5>
+                    <ul>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="register.html">Register</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="orders.html">My Orders</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact Us</h5>
+                    <ul>
+                        <li><i class="fas fa-envelope me-2"></i> support@quickserve.com</li>
+                        <li><i class="fas fa-phone me-2"></i> +63 2 1234 5678</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 QuickServe Ordering System. All rights reserved.</p>
+                <p>IT 112 – Web Systems and Technologies | Group Project</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="js/app.js"></script>
+    
+    <!-- Dynamic Dropdown Script -->
+    <script>
+        function updateNavbarDropdown() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userName = localStorage.getItem('userName');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+            const userNameDisplay = document.getElementById('userNameDisplay');
+            
+            if (isLoggedIn === 'true' && userName) {
+                // User is logged in - show user name and full menu
+                userNameDisplay.textContent = userName;
+                dropdownMenu.innerHTML = `
+                    <li><a class="dropdown-item" href="dashboard.html">Dashboard</a></li>
+                    <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+                    <li><a class="dropdown-item" href="orders.html">My Orders</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>
+                `;
+            } else {
+                // User is not logged in - show default menu
+                userNameDisplay.textContent = 'Account';
+                dropdownMenu.innerHTML = `
+                    <li><a class="dropdown-item" href="login.html">Login</a></li>
+                    <li><a class="dropdown-item" href="register.html">Register</a></li>
+                `;
+            }
+        }
+        
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            alert('You have been logged out.');
+            window.location.href = 'index.html';
+        }
+        
+        // Update navbar when page loads
+        updateNavbarDropdown();
+    </script>
+</body>
+</html>
