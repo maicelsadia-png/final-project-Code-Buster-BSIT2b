@@ -1,52 +1,151 @@
-# User Management API - Backend
-
-A simple backend API that lets you create, read, update, and delete users. Built with Express and MongoDB.
 
 ---
 
-## 📌 Routes (API Endpoints)
+🍔 QuickServe Ordering System
+---
 
-These are the URLs you can call to work with users:
+🚀 IT 112 – Web Systems and Technologies
+---
 
-| What it does | Method | URL |
-|--------------|--------|-----|
-| Create a new user | POST | `/api/users` |
-| Get all users | GET | `/api/users` |
-| Get one user by ID | GET | `/api/users/:id` |
-| Update a user by ID | PUT | `/api/users/:id` |
-| Delete a user by ID | DELETE | `/api/users/:id` |
+BSIT-2B | 2nd Semester
 
-> `:id` means you replace it with the actual user ID, like `/api/users/65abc123`
+
+---
+📅 Submission
+
+📍 Submitted to: Guillermo V. Red, Jr.
+
+📆 Date: March 28, 2026
 
 ---
 
-## 📦 User Model (What a user looks like)
+👨‍💻 Developers
 
-Each user in the database has these 4 fields:
+👤 Samuel L. Gonzales (Backend) 
 
-| Field | Type | What it stores |
-|-------|------|----------------|
-| name | String | The person's full name |
-| email | String | Email address (used for login) |
-| password | String | Account password |
-| role | String | User type like "admin" or "customer" |
+👤 Roel B. Moendem  (Front-end) 
 
----
+👤 Nicka D. Tambobong (Documentation Officer) 
 
-## 🔌 How the Connection Works
+👤 Maicel Joy Sadia (GitHub Manager) 
 
-- **Database:** MongoDB Atlas (cloud database)
-- **Connector:** Mongoose (helps JavaScript talk to MongoDB)
-- **Credentials:** Stored in a `.env` file (not shared on GitHub)
-- **Server Port:** 3000 by default
+👤 Aedan Jaden Pielago (Data Base Manager) 
 
-The connection happens in `config/db.js`. When you start the server, it automatically connects to MongoDB.
+
 
 ---
 
-## 🚀 How to Run This Backend on Your Computer
+📌 Project Overview
 
-### Step 1: Get the code
-```bash
-git clone <your-repo-url>
-cd your-project/backend
+QuickServe is a 🌐 web-based ordering system designed to make purchasing faster, easier, and more convenient. It helps users avoid long lines and manual ordering by providing a smooth and automated digital experience.
+
+💡 Perfect for small to medium businesses adapting to modern technology.
+
+
+---
+
+🎯 Purpose
+
+The system aims to:
+
+⚡ Simplify ordering processes
+
+📦 Allow users to track purchases
+
+🛒 Provide a seamless shopping experience
+
+
+
+---
+
+👥 Target Users
+
+🧑‍💼 Customers
+
+🛠️ Admin (Store Manager)
+
+
+
+---
+
+✨ Key Features
+
+🔐 User Authentication (JWT)
+
+🛍️ Browse Products & View Details
+
+🛒 Add to Cart & Checkout
+
+📊 Admin Order Management
+
+📱 Responsive Design
+
+
+
+---
+
+🧩 Tech Stack
+
+🌐 Frontend: HTML, CSS, JavaScript
+
+⚙️ Backend: Node.js, Express
+
+🗄️ Database: MongoDB
+
+
+
+---
+
+🔄 System Flow
+
+1. 🌍 User accesses the system via browser
+
+
+2. 🎨 Frontend displays interface
+
+
+3. 📡 Requests sent to backend (API)
+
+
+4. ⚙️ Backend processes data
+
+
+5. 🗄️ Database stores/retrieves info
+
+
+6. 📤 Response sent back to frontend
+
+
+7. ✅ User sees updated results (e.g., order confirmation)
+
+
+
+
+---
+
+📊 System Diagrams
+
+📌 Use Case Diagram
+
+📌 Entity-Relationship Diagram
+
+📌 System Architecture Diagram
+
+
+---
+
+💡 Why QuickServe?
+
+✔ Faster transactions
+✔ Reduced errors
+✔ Contactless ordering
+✔ Better business management
+
+
+
+
+---
+
+🌟 
+
+> “Simple, fast, and reliable — ordering made smarter. 
