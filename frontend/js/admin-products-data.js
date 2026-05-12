@@ -17,7 +17,7 @@ async function loadProducts() {
     
     try {
         console.log('Fetching products from API...');
-        const response = await fetch('http://localhost:3000/api/products');
+        const response = await fetch('https://quickserve-j4u8.onrender.com/api/products');
         
         if (!response.ok) {
             throw new Error('Failed to fetch products');
