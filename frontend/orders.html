@@ -198,7 +198,7 @@
             // Full URL - use directly
             if (item.image && (item.image.startsWith('http://') || item.image.startsWith('https://'))) return item.image;
             // Backend /uploads/ path
-            if (item.image && item.image.startsWith('/uploads/')) return 'http://localhost:3000' + item.image;
+            if (item.image && item.image.startsWith('/uploads/')) return 'https://quickserve-j4u8.onrender.com' + item.image;
             // Base64
             if (item.imageData && item.imageData.startsWith('data:')) return item.imageData;
             if (item.image && item.image.startsWith('data:')) return item.image;
@@ -224,7 +224,7 @@
             const userId = localStorage.getItem('userId');
 
             try {
-                const response = await fetch(`http://localhost:3000/api/orders/user/${userId}`, {
+                const response = await fetch(`https://quickserve-j4u8.onrender.com/api/orders/user/${userId}`, {
                     headers: ordersAuthHeaders()
                 });
                 if (response.status === 401) { logout(); return; }
@@ -317,7 +317,7 @@
         document.getElementById('confirmCancelOrderBtn')?.addEventListener('click', async function() {
             if (!orderToCancel) return;
             try {
-                const res = await fetch(`http://localhost:3000/api/orders/${orderToCancel}/cancel`, {
+                const res = await fetch(`https://quickserve-j4u8.onrender.com/api/orders/${orderToCancel}/cancel`, {
                     method: 'PUT',
                     headers: ordersAuthHeaders()
                 });
@@ -343,7 +343,7 @@
                 recvBtn.disabled = true;
                 recvBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Updating...';
                 try {
-                    const res = await fetch(`http://localhost:3000/api/orders/${id}/received`, {
+                    const res = await fetch(`https://quickserve-j4u8.onrender.com/api/orders/${id}/received`, {
                         method: 'PUT',
                         headers: ordersAuthHeaders()
                     });
@@ -367,7 +367,7 @@
             if (hideBtn) {
                 const id = hideBtn.getAttribute('data-id');
                 try {
-                    await fetch(`http://localhost:3000/api/orders/${id}/user-hide`, {
+                    await fetch(`https://quickserve-j4u8.onrender.com/api/orders/${id}/user-hide`, {
                         method: 'DELETE',
                         headers: ordersAuthHeaders()
                     });
@@ -383,7 +383,7 @@
         document.getElementById('clearHistoryBtn')?.addEventListener('click', async function() {
             if (!confirm('Are you sure you want to clear your entire order history? This cannot be undone.')) return;
             try {
-                const res = await fetch('http://localhost:3000/api/orders/user/clear-history', {
+                const res = await fetch('https://quickserve-j4u8.onrender.com/api/orders/user/clear-history', {
                     method: 'DELETE',
                     headers: ordersAuthHeaders()
                 });

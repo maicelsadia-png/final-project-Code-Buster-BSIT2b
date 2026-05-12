@@ -346,7 +346,7 @@
         headers['x-user-id'] = userId;
 
         try {
-            var response = await fetch('http://localhost:3000/api/orders', {
+            var response = await fetch('https://quickserve-j4u8.onrender.com/api/orders', {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({
