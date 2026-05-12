@@ -148,7 +148,7 @@ async function loadUserProfile(userId) {
         var unameInput = document.getElementById('username');
         var phoneInput = document.getElementById('phone');
         var roleInput  = document.getElementById('role');
-        var memberSince= document.querySelector('input[readonly][value^="January"], input[readonly][placeholder*="Member"]');
+        var memberSince= document.getElementById('memberSince');
 
         if (nameInput  && user.name)     nameInput.value  = user.name;
         if (emailInput && user.email)    emailInput.value = user.email;
