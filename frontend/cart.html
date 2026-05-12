@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickServe | Shopping Cart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-mug-hot me-2"></i>
+                <span>QuickServe</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Menu</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="cart.html">
+                            <i class="fas fa-shopping-cart"></i> Cart
+                            <span class="cart-badge">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> Account
+                        </a>
+                        <ul class="dropdown-menu" id="dropdownMenu"></ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Cart Section -->
+    <section class="cart-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h1 class="page-title">Your Shopping Cart</h1>
+                <p class="page-subtitle">Review your items before checking out</p>
+            </div>
+
+            <div class="row">
+                <!-- Cart Items -->
+                <div class="col-lg-8">
+                    <div class="cart-items-card" id="cartItemsCard">
+                        <div class="cart-header">
+                            <h4><i class="fas fa-shopping-bag me-2"></i>Cart Items (<span id="cartItemsCount">0</span>)</h4>
+                        </div>
+                        <div id="cartItemsContainer"></div>
+                        <div class="cart-footer">
+                            <a href="products.html" class="continue-shopping">
+                                <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+
+                    <div id="emptyCartMessage" class="empty-cart-message text-center py-5 d-none">
+                        <i class="fas fa-shopping-cart fa-4x mb-3" style="color: var(--gray);"></i>
+                        <h4>Your cart is empty</h4>
+                        <p>Looks like you haven't added any items yet.</p>
+                        <a href="products.html" class="btn btn-primary mt-3">Start Shopping</a>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="col-lg-4">
+                    <div class="order-summary-card">
+                        <h4>Order Summary</h4>
+                        <div class="summary-row">
+                            <span>Subtotal</span>
+                            <span id="subtotalAmount">&#8369;0.00</span>
+                        </div>
+                        <div class="summary-row">
+                            <span id="deliveryAmount">&#8369;50.00</span>
+                        </div>
+                        <div class="summary-row discount-row">
+                            <span>Discount</span>
+                            <span>-&#8369;0.00</span>
+                        </div>
+                        <div class="summary-total">
+                            <span>Total</span>
+                            <span id="totalAmount">&#8369;0.00</span>
+                        </div>
+
+                        <!-- Hidden fields used by checkout -->
+                        <input type="hidden" id="hiddenTotalAmount" value="0">
+                        <input type="hidden" id="hiddenCartItems" value="[]">
+
+                        <button type="button" class="btn btn-primary btn-lg w-100 mt-4" id="checkoutBtn">
+                            <i class="fas fa-utensils me-2"></i>Place Order
+                        </button>
+
+                        <div class="mt-3 p-3" style="background:rgba(186,100,81,.08);border-radius:10px;font-size:.87rem;">
+                            <div class="mb-2"><i class="fas fa-store me-2" style="color:var(--primary);"></i><strong>Payment at Counter</strong></div>
+                            <div class="mb-1"><i class="fas fa-money-bill-wave me-2 text-success"></i>Cash at the counter upon claiming</div>
+                            <div class="mb-1"><i class="fas fa-qrcode me-2" style="color:#007aff;"></i>GCash: scan QR code at the counter</div>
+                            <div class="mb-1"><i class="fas fa-mobile-alt me-2" style="color:#6c3fa1;"></i>Maya: scan QR code at the counter</div>
+                            <div><i class="fas fa-university me-2" style="color:#1a5276;"></i>Bank Transfer: see cashier for details</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- You Might Also Like -->
+            <section class="recommended-section mt-5">
+                <h3 class="section-title">You Might Also Like</h3>
+                <div class="row g-4 mt-2">
+                    <div class="col-md-3">
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="img/products/French-Fries.jpg" alt="French Fries" class="img-fluid">
+                            </div>
+                            <div class="product-body">
+                                <h5>French Fries</h5>
+                                <div class="product-price">&#8369;89.00</div>
+                                <button class="btn btn-sm btn-primary w-100 add-to-cart-quick"
+                                        data-id="french-fries" data-name="French Fries" data-price="89"
+                                        data-image="French-Fries.jpg">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="img/products/Gourmet-Burger.jpg" alt="Gourmet Burger" class="img-fluid">
+                            </div>
+                            <div class="product-body">
+                                <h5>Gourmet Burger</h5>
+                                <div class="product-price">&#8369;120.00</div>
+                                <button class="btn btn-sm btn-primary w-100 add-to-cart-quick"
+                                        data-id="gourmet-burger" data-name="Gourmet Burger" data-price="120"
+                                        data-image="Gourmet-Burger.jpg">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="img/products/Cheesecake.jpg" alt="Cheesecake" class="img-fluid">
+                            </div>
+                            <div class="product-body">
+                                <h5>Cheesecake</h5>
+                                <div class="product-price">&#8369;149.00</div>
+                                <button class="btn btn-sm btn-primary w-100 add-to-cart-quick"
+                                        data-id="cheesecake" data-name="Cheesecake" data-price="149"
+                                        data-image="Cheesecake.jpg">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="product-card">
+                            <div class="product-img">
+                                <img src="img/products/Chocolate-Cake.jpg" alt="Chocolate Cake" class="img-fluid">
+                            </div>
+                            <div class="product-body">
+                                <h5>Chocolate Cake</h5>
+                                <div class="product-price">&#8369;129.00</div>
+                                <button class="btn btn-sm btn-primary w-100 add-to-cart-quick"
+                                        data-id="chocolate-cake" data-name="Chocolate Cake" data-price="129"
+                                        data-image="Chocolate-Cake.jpg">Add to Cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-mug-hot me-2"></i>QuickServe</h5>
+                    <p>Fast. Smooth. Effortless ordering experience.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="products.html">Menu</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Account</h5>
+                    <ul>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="register.html">Register</a></li>
+                        <li><a href="dashboard.html">Dashboard</a></li>
+                        <li><a href="orders.html">My Orders</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact Us</h5>
+                    <ul>
+                        <li><i class="fas fa-envelope me-2"></i> support@quickserve.com</li>
+                        <li><i class="fas fa-phone me-2"></i> +63 2 1234 5678</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 QuickServe Ordering System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+
+    <!-- Order Confirmation Modal -->
+    <div class="modal fade" id="orderConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius:16px;">
+                <div class="modal-header" style="background:var(--primary);color:#fff;border-radius:16px 16px 0 0;">
+                    <h5 class="modal-title"><i class="fas fa-utensils me-2"></i>Confirm Your Order</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Order items summary -->
+                    <div id="orderSummaryItems" class="mb-3"></div>
+
+                    <div class="d-flex justify-content-between fw-bold border-top pt-2 mb-3">
+                        <span>Total Amount</span>
+                        <span id="modalTotalAmount" style="color:var(--primary);">₱0.00</span>
+                    </div>
+
+                    <!-- Pay at counter notice (Fix #9) -->
+                    <div class="alert mb-3 p-3" style="background:rgba(186,100,81,.08);border:1.5px solid var(--primary);border-radius:12px;">
+                        <div class="mb-2" style="font-weight:600;color:var(--primary);"><i class="fas fa-store me-2"></i>Payment at Counter Only</div>
+                        <div class="mb-1" style="font-size:.88rem;"><i class="fas fa-money-bill-wave me-2 text-success"></i><strong>Cash:</strong> Pay cash at the counter when you claim your order.</div>
+                        <div class="mb-1" style="font-size:.88rem;"><i class="fas fa-qrcode me-2" style="color:#007aff;"></i><strong>GCash:</strong> Scan QR code at the counter upon claiming. No online payment processed.</div>
+                        <div class="mb-1" style="font-size:.88rem;"><i class="fas fa-mobile-alt me-2" style="color:#6c3fa1;"></i><strong>Maya (PayMaya):</strong> Scan Maya QR code at the counter upon claiming.</div>
+                        <div style="font-size:.88rem;"><i class="fas fa-university me-2" style="color:#1a5276;"></i><strong>Bank Transfer:</strong> BDO / BPI / UnionBank — ask the cashier for account details.</div>
+                    </div>
+
+                    <!-- Special instructions -->
+                    <div class="mb-3">
+                        <label class="form-label"><i class="fas fa-comment-alt me-1"></i>Special Instructions <small class="text-muted">(optional)</small></label>
+                        <textarea class="form-control" id="specialInstructions" rows="2"
+                                  placeholder="e.g. No onions, extra sauce, seat preference..."></textarea>
+                    </div>
+
+                    <button class="btn btn-primary w-100" id="confirmOrderBtn">
+                        <i class="fas fa-check-circle me-2"></i>Confirm Order
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Success Modal -->
+    <div class="modal fade" id="orderSuccessModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius:16px;text-align:center;">
+                <div class="modal-body p-5">
+                    <i class="fas fa-check-circle fa-4x mb-3" style="color:#6B8C5C;"></i>
+                    <h4>Order Sent!</h4>
+                    <p class="fw-bold" id="successOrderNumber" style="color:var(--primary);font-size:1.1rem;"></p>
+                    <p class="text-muted">Your order has been successfully sent to the restaurant.</p>
+                    <div class="alert py-2 mb-3" style="background:rgba(186,100,81,.1);border-radius:10px;font-size:.9rem;">
+                        <i class="fas fa-bell me-2" style="color:var(--primary);"></i>
+                        Please wait for your <strong>name or order number</strong> to be called before claiming your order.
+                    </div>
+                    <a href="orders.html" class="btn btn-primary me-2">Track My Order</a>
+                    <a href="products.html" class="btn btn-outline-secondary">Order More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth-guard.js"></script>
+
+    <script>
+    // ── Wire up Place Order button ────────────────────────────────────────────
+    document.getElementById('checkoutBtn').addEventListener('click', function() {
+        var cartArr = [];
+        try {
+            // Read from user-scoped key first, fall back to legacy
+            var _uid = localStorage.getItem('userId');
+            var _key = _uid ? 'quickServeCart_' + _uid : 'quickServeCart';
+            cartArr = JSON.parse(localStorage.getItem(_key) || localStorage.getItem('quickServeCart') || '[]');
+        } catch(e) {}
+
+        if (cartArr.length === 0) { showNotification('Your cart is empty!', 'error'); return; }
+        if (localStorage.getItem('isLoggedIn') !== 'true') {
+            showNotification('Please login first to place an order', 'error');
+            setTimeout(function() { window.location.href = 'login.html'; }, 1200); return;
+        }
+
+        // Build order summary
+        var summaryHtml = '<div class="mb-2"><strong>Your Order:</strong></div>';
+        summaryHtml += '<ul class="list-unstyled mb-0">';
+        cartArr.forEach(function(item) {
+            summaryHtml += '<li class="d-flex justify-content-between py-1 border-bottom">' +
+                '<span>' + item.name + ' &times; ' + item.quantity + '</span>' +
+                '<span>&#8369;' + (item.price * item.quantity).toFixed(2) + '</span></li>';
+        });
+        summaryHtml += '</ul>';
+
+        document.getElementById('orderSummaryItems').innerHTML = summaryHtml;
+
+        var total = parseFloat(document.getElementById('hiddenTotalAmount').value || 0);
+        document.getElementById('modalTotalAmount').textContent = '₱' + total.toFixed(2);
+        document.getElementById('specialInstructions').value = '';
+
+        // Reset confirm button
+        var confirmBtn = document.getElementById('confirmOrderBtn');
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Confirm Order';
+
+        new bootstrap.Modal(document.getElementById('orderConfirmModal')).show();
+    });
+
+    // ── Confirm order ─────────────────────────────────────────────────────────
+    document.getElementById('confirmOrderBtn').addEventListener('click', async function() {
+        var userId = localStorage.getItem('userId');
+        var token  = localStorage.getItem('token');
+
+        if (!userId) { showNotification('Please login first', 'error'); window.location.href = 'login.html'; return; }
+
+        var totalAmount = parseFloat(document.getElementById('hiddenTotalAmount').value || 0);
+        var cartItems   = [];
+        try { cartItems = JSON.parse(document.getElementById('hiddenCartItems').value || '[]'); } catch(e) {}
+        if (cartItems.length === 0) { showNotification('Your cart is empty!', 'error'); return; }
+
+        var specialInstructions = document.getElementById('specialInstructions').value.trim();
+
+        var btn = this;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Placing Order...';
+
+        var headers = { 'Content-Type': 'application/json' };
+        if (token) headers['Authorization'] = 'Bearer ' + token;
+        headers['x-user-id'] = userId;
+
+        try {
+            var response = await fetch('http://localhost:3000/api/orders', {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify({
+                    userId: userId,
+                    products: cartItems,
+                    totalAmount: totalAmount,
+                    specialInstructions: specialInstructions
+                })
+            });
+
+            var data = await response.json();
+
+            if (response.ok) {
+                // Clear cart - both user-scoped and legacy keys
+                var _uid = localStorage.getItem('userId');
+                if (_uid) localStorage.removeItem('quickServeCart_' + _uid);
+                localStorage.removeItem('quickServeCart');
+                if (typeof cart !== 'undefined') cart = [];
+                if (typeof updateCartBadges === 'function') updateCartBadges();
+                if (typeof renderCartPage === 'function') renderCartPage();
+                // Bug 1 fix: signal dashboard to refresh
+                localStorage.setItem('lastOrderPlaced', Date.now().toString());
+
+                // Close confirm modal
+                var confirmModal = bootstrap.Modal.getInstance(document.getElementById('orderConfirmModal'));
+                if (confirmModal) confirmModal.hide();
+
+                // Show success modal with order number
+                setTimeout(function() {
+                    var orderNum = (data.order && data.order.orderNumber) ? data.order.orderNumber : 'QS-' + Date.now().toString().slice(-6);
+                    document.getElementById('successOrderNumber').textContent = 'Order #' + orderNum;
+                    new bootstrap.Modal(document.getElementById('orderSuccessModal')).show();
+                }, 400);
+
+            } else {
+                showNotification(data.message || 'Failed to place order. Please try again.', 'error');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Confirm Order';
+            }
+
+        } catch(err) {
+            console.error('Order error:', err);
+            showNotification('Connection error. Make sure the backend is running on port 3000.', 'error');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Confirm Order';
+        }
+    });
+    </script>
+
+</body>
+</html>

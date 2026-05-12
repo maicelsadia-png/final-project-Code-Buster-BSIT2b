@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Test</title>
+</head>
+<body>
+    <h1>API Test</h1>
+    <div id="result">Loading...</div>
+    
+    <script>
+        fetch('http://localhost:3000/api/products')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerHTML = `
+                    <h2>✅ API Working!</h2>
+                    <p>Number of products: ${data.length}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            })
+            .catch(error => {
+                document.getElementById('result').innerHTML = `
+                    <h2>❌ API Failed!</h2>
+                    <p>Error: ${error.message}</p>
+                    <p>Make sure backend is running on port 3000</p>
+                `;
+            });
+    </script>
+</body>
+</html>

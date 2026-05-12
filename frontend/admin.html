@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickServe | Admin Dashboard</title>
+    
+    <!-- Bootstrap 5 CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for Dashboard Charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Navigation Bar - Admin Only -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="admin.html">
+                <i class="fas fa-mug-hot me-2"></i>
+                <span>QuickServe Admin</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-shield"></i> Admin
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="admin.html">Admin Panel</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="login.html" onclick="logout()">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Dashboard Section -->
+    <section class="admin-section">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h1 class="page-title">Admin Dashboard</h1>
+                <p class="page-subtitle">Manage products, orders, and reviews</p>
+            </div>
+
+            <!-- Admin Tabs -->
+            <ul class="nav nav-tabs admin-tabs mb-4" id="adminTab" role="tablist">
+                <li class="nav-item">
+                    <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#productsPanel" type="button" role="tab">
+                        <i class="fas fa-box me-2"></i>Products
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="orders-tab" data-bs-toggle="tab" data-bs-target="#ordersPanel" type="button" role="tab">
+                        <i class="fas fa-truck me-2"></i>Orders
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviewsPanel" type="button" role="tab">
+                        <i class="fas fa-star me-2"></i>Reviews
+                    </button>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link" id="users-tab" data-bs-toggle="tab" data-bs-target="#usersPanel" type="button" role="tab">
+                        <i class="fas fa-users me-2"></i>Users
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content">
+                <!-- Products Panel -->
+                <div class="tab-pane fade show active" id="productsPanel" role="tabpanel">
+                    <div class="mb-4 text-end">
+                        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                            <i class="fas fa-plus me-2"></i>Add Menu Item
+                        </button>
+                    </div>
+
+                    <div class="admin-table-wrapper">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Image</th>
+                                    <th>Item Name</th>
+                                    <th>Price</th>
+                                    <th>Created At</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productList">
+                                <tr><td colspan="6" class="text-center">Loading products...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Orders Panel -->
+                <div class="tab-pane fade" id="ordersPanel" role="tabpanel">
+                    <div id="ordersToggleArea"></div>
+                    <div class="admin-table-wrapper">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Total</th>
+                                    <th>Status</th>
+                                    <th>Payment</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersList">
+                                <tr><td colspan="7" class="text-center">Loading orders...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Reviews Panel -->
+                <div class="tab-pane fade" id="reviewsPanel" role="tabpanel">
+                    <div class="admin-table-wrapper">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Product</th>
+                                    <th>Customer</th>
+                                    <th>Rating</th>
+                                    <th>Review</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reviewsList">
+                                <td><td colspan="7" class="text-center">Loading reviews...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Users Panel -->
+                <div class="tab-pane fade" id="usersPanel" role="tabpanel">
+                    <div class="admin-table-wrapper">
+                        <table class="table admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Joined Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="usersList">
+                                <td><td colspan="6" class="text-center">Loading users...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Product Modal -->
+    <div class="modal fade" id="addProductModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Menu Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="addProductForm">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Item Name</label>
+                            <input type="text" class="form-control" id="productName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productPrice" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="productPrice" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productDesc" class="form-label">Description</label>
+                            <textarea class="form-control" id="productDesc" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productStock" class="form-label">Stock Quantity</label>
+                            <input type="number" class="form-control" id="productStock" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Item Image</label>
+                            <input type="file" class="form-control" id="productImageFile" accept="image/*"
+                                   onchange="previewProductImage(this,'addImagePreview')">
+                            <small class="text-muted">Upload an image (JPG, PNG, etc.)</small>
+                            <div id="addImagePreview" class="mt-2" style="display:none;">
+                                <img id="addImagePreviewImg" src="" alt="Preview"
+                                     style="max-height:120px;border-radius:8px;object-fit:cover;">
+                            </div>
+                            <input type="hidden" id="productImage" value="placeholder.jpg">
+                        </div>
+                        <div class="mb-3">
+                            <label for="productCategory" class="form-label">Category</label>
+                            <select class="form-select" id="productCategory">
+                                <option value="meals">Meals</option>
+                                <option value="drinks">Drinks</option>
+                                <option value="desserts">Desserts</option>
+                                <option value="snacks">Snacks</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Add Menu Item</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Menu Item Modal -->
+    <div class="modal fade" id="editProductModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Menu Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="editProductName" class="form-label">Item Name</label>
+                            <input type="text" class="form-control" id="editProductName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editProductPrice" class="form-label">Price</label>
+                            <input type="number" class="form-control" id="editProductPrice" step="0.01" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editProductDesc" class="form-label">Description</label>
+                            <textarea class="form-control" id="editProductDesc" rows="3" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editProductStock" class="form-label">Stock Quantity</label>
+                            <input type="number" class="form-control" id="editProductStock" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Product Image</label>
+                            <input type="file" class="form-control mb-2" id="editProductImageFile" accept="image/*"
+                                   onchange="previewProductImage(this,'editImagePreview')">
+                            <small class="text-muted">Upload a new image, or leave blank to keep current.</small>
+                            <div id="editImagePreview" class="mt-2" style="display:none;">
+                                <img id="editImagePreviewImg" src="" alt="Preview"
+                                     style="max-height:80px;border-radius:8px;object-fit:cover;">
+                            </div>
+                            <input type="hidden" id="editProductImage">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Update Order Status Modal -->
+    <div class="modal fade" id="updateOrderModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Order Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="updateOrderId">
+                    <div class="mb-3">
+                        <label for="orderStatus" class="form-label">Order Status</label>
+                        <select class="form-select" id="orderStatus">
+                            <option value="pending">Pending</option>
+                            <option value="preparing">Preparing</option>
+                            <option value="ready">Ready for Pickup</option>
+                            <option value="completed">Completed</option>
+                            <option value="received">Received by Customer</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="confirmUpdateStatusBtn">Update Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Are you sure you want to delete this item? This action cannot be undone.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5><i class="fas fa-mug-hot me-2"></i>QuickServe Admin</h5>
+                    <p>Fast. Smooth. Effortless ordering experience. Serving happiness with every order.</p>
+                </div>
+                <div class="col-md-2">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="admin.html">Admin Panel</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Account</h5>
+                    <ul>
+                        <li><a href="login.html">Login</a></li>
+                        <li><a href="register.html">Register</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h5>Contact Us</h5>
+                    <ul>
+                        <li><i class="fas fa-envelope me-2"></i> support@quickserve.com</li>
+                        <li><i class="fas fa-phone me-2"></i> +63 2 1234 5678</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 QuickServe Ordering System. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="js/app.js"></script>
+    <script src="js/auth-guard.js"></script>
+    
+    <!-- Phase 6: Admin Dashboard JavaScript -->
+    <script>
+        // ── ADMIN AUTH GUARD ──────────────────────────────────────────────────
+        (function() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userRole   = localStorage.getItem('userRole');
+            if (isLoggedIn !== 'true' || userRole !== 'admin') {
+                alert('Access denied. Admins only.');
+                window.location.href = 'login.html';
+            }
+        })();
+
+        // ── AUTH HEADERS HELPER ───────────────────────────────────────────────
+        function adminHeaders() {
+            const token  = localStorage.getItem('token');
+            const userId = localStorage.getItem('userId');
+            const h = { 'Content-Type': 'application/json' };
+            if (token)  h['Authorization'] = `Bearer ${token}`;
+            if (userId) h['x-user-id'] = userId;
+            return h;
+        }
+
+        // Global variables
+        let currentDeleteId = null;
+        let currentDeleteType = null;
+        let salesChart, topProductsChart;
+        var _showArchivedOrders = false;
+
+        // ========================================
+        // LOGOUT
+        // ========================================
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userRole');
+            alert('You have been logged out.');
+            window.location.href = 'login.html';
+        }
+
+        // ========================================
+        // PRODUCTS - CRUD
+        // ========================================
+        async function loadProducts() {
+            const tbody = document.getElementById('productList');
+            try {
+                const res = await fetch('http://localhost:3000/api/products', { headers: adminHeaders() });
+                const products = await res.json();
+                if (products.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No products found</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = products.map(p => `
+                    <tr data-id="${p._id}">
+                        <td>${p._id.slice(-6)}</td>
+                        <td><img src="${p.image && p.image.startsWith('/uploads/') ? 'http://localhost:3000' + p.image : (p.imageData ? p.imageData : 'img/products/' + (p.image || 'placeholder.jpg'))}" class="admin-product-img" style="width:50px;height:50px;object-fit:cover;border-radius:6px;" onerror="this.src='img/products/placeholder.jpg'"></td>
+                        <td>${escapeHtml(p.name)}</td>
+                        <td>₱${p.price.toFixed(2)}</td>
+                        <td>${new Date(p.createdAt).toLocaleDateString()}</td>
+                        <td>
+                            <button class="action-edit" onclick="editProduct('${p._id}')"><i class="fas fa-edit"></i></button>
+                            <button class="action-delete" onclick="showDeleteModal('${p._id}', 'product')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch(err) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load products</td></tr>';
+            }
+        }
+
+        async function editProduct(id) {
+            try {
+                const res = await fetch(`http://localhost:3000/api/products/${id}`, { headers: adminHeaders() });
+                const p = await res.json();
+                document.getElementById('editProductId').value = p._id;
+                document.getElementById('editProductName').value = p.name;
+                document.getElementById('editProductPrice').value = p.price;
+                document.getElementById('editProductDesc').value = p.description || '';
+                document.getElementById('editProductStock').value = p.stock || 0;
+                document.getElementById('editProductImage').value = p.image || '';
+                new bootstrap.Modal(document.getElementById('editProductModal')).show();
+            } catch(err) {
+                alert('Failed to load product details');
+            }
+        }
+
+        document.getElementById('editProductForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editProductId').value;
+            try {
+                // Upload new image if a file was selected
+                let imagePath = document.getElementById('editProductImage').value || 'placeholder.jpg';
+                const editImageFile = document.getElementById('editProductImageFile');
+                if (editImageFile && editImageFile.files && editImageFile.files[0]) {
+                    const formData = new FormData();
+                    formData.append('image', editImageFile.files[0]);
+                    const uploadRes = await fetch('http://localhost:3000/api/products/upload-image', {
+                        method: 'POST',
+                        headers: (() => {
+                            const h = {};
+                            const t = localStorage.getItem('token');
+                            const u = localStorage.getItem('userId');
+                            if (t) h['Authorization'] = 'Bearer ' + t;
+                            if (u) h['x-user-id'] = u;
+                            return h;
+                        })(),
+                        body: formData
+                    });
+                    const uploadResult = await uploadRes.json();
+                    if (!uploadRes.ok) throw new Error(uploadResult.message || 'Image upload failed');
+                    imagePath = uploadResult.imagePath;
+                }
+
+                const data = {
+                    name: document.getElementById('editProductName').value,
+                    price: parseFloat(document.getElementById('editProductPrice').value),
+                    description: document.getElementById('editProductDesc').value,
+                    stock: parseInt(document.getElementById('editProductStock').value),
+                    image: imagePath,
+                    imageData: null
+                };
+                const res = await fetch(`http://localhost:3000/api/products/${id}`, {
+                    method: 'PUT',
+                    headers: adminHeaders(),
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) { const d = await res.json(); throw new Error(d.message); }
+                showNotification('Product updated successfully!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('editProductModal')).hide();
+                document.getElementById('editProductImageFile').value = '';
+                document.getElementById('editImagePreview').style.display = 'none';
+                loadProducts();
+            } catch(err) {
+                alert('Failed to update product: ' + (err.message || ''));
+            }
+        });
+
+        document.getElementById('addProductForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name      = document.getElementById('productName').value.trim();
+            const price     = parseFloat(document.getElementById('productPrice').value);
+            const desc      = document.getElementById('productDesc').value.trim();
+            const stock     = parseInt(document.getElementById('productStock').value) || 999;
+            const category  = document.getElementById('productCategory')?.value || 'other';
+            const available = document.getElementById('productAvailable')?.checked !== false;
+
+            if (!name || isNaN(price) || !desc || isNaN(stock)) {
+                showNotification('Please fill in all required fields', 'error'); return;
+            }
+            if (price <= 0) { showNotification('Price must be greater than 0', 'error'); return; }
+
+            try {
+                // Step 1: Upload image to backend if a file was selected
+                let imagePath = 'placeholder.jpg';
+                const imageFileInput = document.getElementById('productImageFile');
+                if (imageFileInput && imageFileInput.files && imageFileInput.files[0]) {
+                    const formData = new FormData();
+                    formData.append('image', imageFileInput.files[0]);
+                    const uploadRes = await fetch('http://localhost:3000/api/products/upload-image', {
+                        method: 'POST',
+                        headers: (() => {
+                            const h = {};
+                            const t = localStorage.getItem('token');
+                            const u = localStorage.getItem('userId');
+                            if (t) h['Authorization'] = 'Bearer ' + t;
+                            if (u) h['x-user-id'] = u;
+                            return h;
+                        })(),
+                        body: formData
+                    });
+                    const uploadResult = await uploadRes.json();
+                    if (!uploadRes.ok) throw new Error(uploadResult.message || 'Image upload failed');
+                    imagePath = uploadResult.imagePath; // e.g. /uploads/product-123.jpg
+                }
+
+                // Step 2: Save product with backend image path (no base64)
+                const data = { name, price, description: desc, stock, image: imagePath, imageData: null, category, available };
+
+                const res = await fetch('http://localhost:3000/api/products', {
+                    method: 'POST',
+                    headers: adminHeaders(),
+                    body: JSON.stringify(data)
+                });
+                const result = await res.json();
+                if (!res.ok) throw new Error(result.message);
+                showNotification('Product added successfully!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('addProductModal')).hide();
+                document.getElementById('addProductForm').reset();
+                document.getElementById('addImagePreview').style.display = 'none';
+                window._pendingProductImageData = null;
+                loadProducts();
+            } catch(err) {
+                showNotification(err.message || 'Failed to add product', 'error');
+            }
+        });
+
+        // ========================================
+        // ORDERS - LOAD & UPDATE STATUS
+        // ========================================
+        async function loadOrders() {
+            var tbody = document.getElementById('ordersList');
+            try {
+                var res = await fetch('http://localhost:3000/api/orders', { headers: adminHeaders() });
+                if (!res.ok) throw new Error('HTTP ' + res.status + ': ' + res.statusText);
+                var allOrders = await res.json();
+
+                // Count archived from the same data
+                var archivedCount = allOrders.filter(function(o) { return o.status === 'archived'; }).length;
+
+                // Filter archived unless toggle is on
+                var orders = _showArchivedOrders
+                    ? allOrders
+                    : allOrders.filter(function(o) { return o.status !== 'archived'; });
+
+                // Show/hide archived toggle button
+                var toggleArea = document.getElementById('ordersToggleArea');
+                if (toggleArea) {
+                    if (archivedCount > 0) {
+                        var btnLabel = _showArchivedOrders
+                            ? '<i class="fas fa-eye-slash me-1"></i>Hide Deleted'
+                            : '<i class="fas fa-eye me-1"></i>Show Deleted (' + archivedCount + ')';
+                        toggleArea.innerHTML = '<button class="btn btn-sm btn-outline-secondary mb-3" onclick="toggleArchivedOrders()">' + btnLabel + '</button>';
+                    } else {
+                        toggleArea.innerHTML = '';
+                    }
+                }
+
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No orders found</td></tr>';
+                    return;
+                }
+
+                // Build rows without nested template literals
+                var rows = '';
+                for (var i = 0; i < orders.length; i++) {
+                    var o = orders[i];
+                    var statusLabel = (o.status || 'pending').charAt(0).toUpperCase() + (o.status || 'pending').slice(1);
+                    var customerName = (o.userId && o.userId.name) ? o.userId.name : 'Customer';
+                    var orderDate = new Date(o.createdAt).toLocaleDateString();
+                    var orderId = o.orderNumber || o._id.slice(-8);
+                    var total = '&#8369;' + (o.totalAmount || 0).toFixed(2);
+                    var payment = o.paymentMethod || 'Cash at Counter';
+                    var statusStyle = getStatusBadgeClass(o.status);
+
+                    // Action buttons - no nested backticks
+                    var actionBtns = '';
+                    if (o.status === 'received') {
+                        actionBtns += '<span style="background:#27AE60;color:#fff;padding:3px 10px;border-radius:12px;font-size:.75rem;font-weight:600;margin-right:4px;">' +
+                            '<i class="fas fa-check-circle me-1"></i>Received</span>';
+                    }
+                    actionBtns += '<button class="action-edit" onclick="openUpdateOrderModal(\'' + o._id + '\',\'' + o.status + '\')" title="Update Status"><i class="fas fa-edit"></i></button>';
+
+                    var archiveable = ['cancelled', 'completed', 'received', 'archived'];
+                    if (archiveable.indexOf(o.status) !== -1) {
+                        actionBtns += '<button onclick="deleteOrder(\'' + o._id + '\')" ' +
+                            'style="background:#C95A49;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:.78rem;cursor:pointer;margin-left:4px;" ' +
+                            'title="Delete this order"><i class="fas fa-trash"></i></button>';
+                    }
+
+                    rows += '<tr data-id="' + o._id + '">' +
+                        '<td>' + orderId + '</td>' +
+                        '<td>' + customerName + '</td>' +
+                        '<td>' + orderDate + '</td>' +
+                        '<td>' + total + '</td>' +
+                        '<td><span style="' + statusStyle + 'padding:3px 12px;border-radius:20px;font-size:.82rem;font-weight:600;">' + statusLabel + '</span></td>' +
+                        '<td>' + payment + '</td>' +
+                        '<td style="display:flex;gap:4px;align-items:center;flex-wrap:wrap;">' + actionBtns + '</td>' +
+                    '</tr>';
+                }
+                tbody.innerHTML = rows;
+
+            } catch(err) {
+                console.error('loadOrders error:', err);
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Failed to load orders: ' + err.message + '</td></tr>';
+            }
+        }
+
+        function toggleArchivedOrders() {
+            _showArchivedOrders = !_showArchivedOrders;
+            loadOrders();
+        }
+
+        async function deleteOrder(id) {
+            if (!confirm('Are you sure you want to delete this order? This cannot be undone.')) return;
+            try {
+                const res = await fetch(`http://localhost:3000/api/orders/${id}/archive`, {
+                    method: 'PUT',
+                    headers: adminHeaders()
+                });
+                if (res.ok) {
+                    showNotification('Order archived successfully', 'success');
+                    loadOrders();
+                } else {
+                    showNotification('Failed to archive order', 'error');
+                }
+            } catch (err) {
+                showNotification('Connection error', 'error');
+            }
+        }
+
+        function getStatusBadgeClass(status) {
+            var styles = {
+                pending:   'background:#D4A13E;color:#fff;',
+                preparing: 'background:#E67E22;color:#fff;',
+                ready:     'background:#27AE60;color:#fff;',
+                completed: 'background:#6B8C5C;color:#fff;',
+                cancelled: 'background:#C95A49;color:#fff;',
+                received:  'background:#1a5276;color:#fff;',
+                archived:  'background:#95a5a6;color:#fff;'
+            };
+            return styles[status] || styles.pending;
+        }
+        
+
+        function openUpdateOrderModal(id, currentStatus) {
+            document.getElementById('updateOrderId').value = id;
+            document.getElementById('orderStatus').value = currentStatus;
+            new bootstrap.Modal(document.getElementById('updateOrderModal')).show();
+        }
+
+        document.getElementById('confirmUpdateStatusBtn')?.addEventListener('click', async function() {
+            const id = document.getElementById('updateOrderId').value;
+            const status = document.getElementById('orderStatus').value;
+            try {
+                await fetch(`http://localhost:3000/api/orders/${id}/status`, {
+                    method: 'PUT',
+                    headers: adminHeaders(),
+                    body: JSON.stringify({ status })
+                });
+                showNotification('Order status updated!', 'success');
+                bootstrap.Modal.getInstance(document.getElementById('updateOrderModal')).hide();
+                loadOrders();
+            } catch(err) {
+                alert('Failed to update order status');
+            }
+        });
+
+        // ========================================
+        // REVIEWS - LOAD & DELETE
+        // ========================================
+        async function loadReviews() {
+            const tbody = document.getElementById('reviewsList');
+            try {
+                const res = await fetch('http://localhost:3000/api/reviews', { headers: adminHeaders() });
+                const reviews = await res.json();
+                if (reviews.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No reviews found</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = reviews.map(r => `
+                    <tr data-id="${r._id}">
+                        <td>${r._id.slice(-6)}</td>
+                        <td>${r.productId?.name || 'Product'}</td>
+                        <td>${r.userName || 'Anonymous'}</td>
+                        <td>${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)} (${r.rating}/5)</td>
+                        <td>${escapeHtml(r.comment?.substring(0, 50) || '')}${r.comment?.length > 50 ? '...' : ''}</td>
+                        <td>${new Date(r.createdAt).toLocaleDateString()}</td>
+                        <td>
+                            <button class="action-delete" onclick="showDeleteModal('${r._id}', 'review')"><i class="fas fa-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch(err) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Failed to load reviews</td></tr>';
+            }
+        }
+
+        // ========================================
+        // USERS - LOAD & DELETE
+        // ========================================
+        async function loadUsers() {
+            const tbody = document.getElementById('usersList');
+            try {
+                const res = await fetch('http://localhost:3000/api/users', { headers: adminHeaders() });
+                const users = await res.json();
+                if (users.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center">No users found</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = users.map(u => `
+                    <tr data-id="${u._id}">
+                        <td>${u._id.slice(-6)}</td>
+                        <td>${escapeHtml(u.name)}</td>
+                        <td>${u.email}</td>
+                        <td><span class="badge ${u.role === 'admin' ? 'bg-danger' : 'bg-secondary'}">${u.role || 'user'}</span></td>
+                        <td>${new Date(u.createdAt).toLocaleDateString()}</td>
+                        <td>
+                            ${u.role !== 'admin' ? `<button class="action-delete" onclick="showDeleteModal('${u._id}', 'user')"><i class="fas fa-trash"></i></button>` : ''}
+                        </td>
+                    </tr>
+                `).join('');
+            } catch(err) {
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Failed to load users</td></tr>';
+            }
+        }
+
+        // ========================================
+        // DELETE MODAL
+        // ========================================
+        function showDeleteModal(id, type) {
+            currentDeleteId = id;
+            currentDeleteType = type;
+            new bootstrap.Modal(document.getElementById('deleteModal')).show();
+        }
+
+        document.getElementById('confirmDeleteBtn')?.addEventListener('click', async function() {
+            if (!currentDeleteId) return;
+            let url = '';
+            if (currentDeleteType === 'product') url = `http://localhost:3000/api/products/${currentDeleteId}`;
+            else if (currentDeleteType === 'review') url = `http://localhost:3000/api/reviews/${currentDeleteId}`;
+            else if (currentDeleteType === 'user') url = `http://localhost:3000/api/users/${currentDeleteId}`;
+            
+            try {
+                const res = await fetch(url, { method: 'DELETE', headers: adminHeaders() });
+                if (res.ok) {
+                    showNotification(`${currentDeleteType.charAt(0).toUpperCase() + currentDeleteType.slice(1)} deleted successfully!`, 'success');
+                    bootstrap.Modal.getInstance(document.getElementById('deleteModal')).hide();
+                    currentDeleteId = null;
+                    if (currentDeleteType === 'product') loadProducts();
+                    else if (currentDeleteType === 'review') loadReviews();
+                    else if (currentDeleteType === 'user') loadUsers();
+                } else {
+                    const d = await res.json();
+                    showNotification(d.message || 'Failed to delete', 'error');
+                }
+            } catch(err) {
+                showNotification('Connection error', 'error');
+            }
+        });
+
+        // ========================================
+        // CHARTS
+        // ========================================
+        function initCharts() {
+            const salesCtx = document.getElementById('salesChart')?.getContext('2d');
+            if (salesCtx) {
+                salesChart = new Chart(salesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                        datasets: [{
+                            label: 'Sales (₱)',
+                            data: [12500, 15800, 18200, 21000, 24500, 28700],
+                            borderColor: '#E85D3A',
+                            backgroundColor: 'rgba(232, 93, 58, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: true }
+                });
+            }
+            const topCtx = document.getElementById('topProductsChart')?.getContext('2d');
+            if (topCtx) {
+                topProductsChart = new Chart(topCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Coffee', 'Pizza', 'Burger', 'Cake', 'Latte'],
+                        datasets: [{
+                            label: 'Units Sold',
+                            data: [245, 189, 167, 134, 98],
+                            backgroundColor: '#BC8C67',
+                            borderRadius: 8
+                        }]
+                    },
+                    options: { responsive: true, maintainAspectRatio: true }
+                });
+            }
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m]));
+        }
+
+        function updateNavbarDropdown() {
+            const isLoggedIn = localStorage.getItem('isLoggedIn');
+            const userName = localStorage.getItem('userName');
+            const userRole = localStorage.getItem('userRole');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            const userDropdown = document.querySelector('#userDropdown');
+            if (isLoggedIn === 'true' && userName && dropdownMenu && userDropdown && userRole === 'admin') {
+                userDropdown.innerHTML = `<i class="fas fa-user-shield"></i> ${userName}`;
+                dropdownMenu.innerHTML = `<li><a class="dropdown-item" href="admin.html">Admin Panel</a></li><li><hr class="dropdown-divider"></li><li><a class="dropdown-item" href="#" onclick="logout()">Logout</a></li>`;
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initCharts();
+            loadProducts();
+            loadOrders();
+            loadReviews();
+            loadUsers();
+            updateNavbarDropdown();
+            
+            document.querySelectorAll('#adminTab button').forEach(btn => {
+                btn.addEventListener('shown.bs.tab', e => {
+                    const target = e.target.getAttribute('data-bs-target');
+                    if (target === '#productsPanel') loadProducts();
+                    else if (target === '#ordersPanel') loadOrders();
+                    else if (target === '#reviewsPanel') loadReviews();
+                    else if (target === '#usersPanel') loadUsers();
+                });
+            });
+        });
+
+        // ── Image preview helper (preview only - image is uploaded to backend on form submit) ───────
+        function previewProductImage(input, previewContainerId) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Only used for local preview - actual upload happens on form submit
+                const container = document.getElementById(previewContainerId);
+                const img = document.getElementById(previewContainerId + 'Img');
+                if (container && img) {
+                    img.src = e.target.result;
+                    container.style.display = 'block';
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ── Fix loadProducts to show imageData if available ───────────────────
+    </script>
+</body>
+</html>
