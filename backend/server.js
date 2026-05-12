@@ -1,7 +1,7 @@
 // server.js - Main server file
 
 require('dns').setServers(['8.8.8.8', '8.8.4.4']);
-require('dotenv').config();
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
