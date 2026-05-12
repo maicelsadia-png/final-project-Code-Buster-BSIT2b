@@ -119,7 +119,7 @@ function resolveImage(item) {
     // Full URL (http://...) - use directly
     if (item.image.startsWith('http://') || item.image.startsWith('https://')) return item.image;
     // Backend /uploads/ path
-    if (item.image.startsWith('/uploads/')) return 'http://localhost:3000' + item.image;
+    if (item.image.startsWith('/uploads/')) return 'https://quickserve-j4u8.onrender.com' + item.image;
     // Base64 (still in memory, not yet saved)
     if (item.image.startsWith('data:')) return item.image;
     // Already has relative path prefix (img/products/...)
@@ -194,12 +194,12 @@ async function fetchMissingCartImages() {
     for (var i = 0; i < needsFetch.length; i++) {
         var item = needsFetch[i];
         try {
-            var resp = await fetch('http://localhost:3000/api/products/' + item.id);
+            var resp = await fetch('https://quickserve-j4u8.onrender.com/api/products/' + item.id);
             if (!resp.ok) continue;
             var product = await resp.json();
             var imgSrc = '';
             if (product.image && product.image.startsWith('/uploads/')) {
-                imgSrc = 'http://localhost:3000' + product.image;
+                imgSrc = 'https://quickserve-j4u8.onrender.com' + product.image;
             } else if (product.imageData && product.imageData.startsWith('data:')) {
                 imgSrc = product.imageData;
             } else if (product.image && product.image !== 'placeholder.jpg') {
@@ -405,5 +405,5 @@ function showNotification(message, type) {
     document.head.appendChild(s);
 })();
 
-var API_BASE_URL='http://localhost:3000/api';
+var API_BASE_URL='https://quickserve-j4u8.onrender.com/api';
 function loginUser(){}function registerUser(){}function fetchProducts(){}function createOrder(){}function fetchUserOrders(){}

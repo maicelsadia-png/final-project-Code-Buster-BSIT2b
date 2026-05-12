@@ -1,6 +1,6 @@
 // product-details-data.js - Fetch and display single product details
 
-var BACKEND_URL = 'http://localhost:3000';
+var BACKEND_URL = 'https://quickserve-j4u8.onrender.com';
 
 // Resolve product image to a public URL
 function getProductImageSrc(product) {

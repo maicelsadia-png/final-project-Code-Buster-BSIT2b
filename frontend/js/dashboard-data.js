@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Verify session from server
     if (token) {
         try {
-            var meResp = await fetch('http://localhost:3000/api/auth/me', {
+            var meResp = await fetch('https://quickserve-j4u8.onrender.com/api/auth/me', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (meResp.ok) {
@@ -84,7 +84,7 @@ async function loadUserOrders(userId, token) {
         if (token)  headers['Authorization'] = 'Bearer ' + token;
         headers['x-user-id'] = userId;
 
-        var resp = await fetch('http://localhost:3000/api/orders/user/' + userId, { headers: headers });
+        var resp = await fetch('https://quickserve-j4u8.onrender.com/api/orders/user/' + userId, { headers: headers });
         if (resp.status === 401) {
             ['token','userId','userName','userEmail','userRole','isLoggedIn']
                 .forEach(function(k){ localStorage.removeItem(k); });

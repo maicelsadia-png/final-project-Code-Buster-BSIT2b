@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (token) headers['Authorization'] = `Bearer ${token}`;
             headers['x-user-id'] = userId;
 
-            const response = await fetch('http://localhost:3000/api/reviews', {
+            const response = await fetch('https://quickserve-j4u8.onrender.com/api/reviews', {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({ productId, rating, comment })
