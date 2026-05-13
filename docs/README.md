@@ -134,13 +134,13 @@ final-project-Code-Buster-BSIT2b/
 
 ---
 Live Deployment
+---
 Render Link: https://quickserve-j4u8.onrender.com
 
 ---
 
 Clear Instructions how to clone the Project
 
----
 1.Open VS Code
 
 2.Click Terminal → New Terminal
@@ -155,8 +155,7 @@ cd Desktop
 
 In terminal add:
 
-git clone https://github.com/maicelsadia-
-png/final-project-Code-Buster-BSIT2b.git
+git clone https://github.com/maicelsadia-png/final-project-Code-Buster-BSIT2b.git
 
 5.Wait for it to finish downloading.
 
