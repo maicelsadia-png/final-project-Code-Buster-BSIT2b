@@ -132,4 +132,44 @@ final-project-Code-Buster-BSIT2b/
 | GET | /api/reviews/product/:id | Public | Get product reviews |
 | DELETE | /api/reviews/:id | Admin | Delete review |
 
+---
+Live Deployment
 Render Link: https://quickserve-j4u8.onrender.com
+
+---
+
+Clear Instructions how to clone the Project
+
+---
+1.Open VS Code
+
+2.Click Terminal → New Terminal
+
+3.Choose where you want to save the project:
+
+In terminal add:
+
+cd Desktop
+
+4.Paste the clone command:
+
+In terminal add:
+
+git clone https://github.com/maicelsadia-
+png/final-project-Code-Buster-BSIT2b.git
+
+5.Wait for it to finish downloading.
+
+6.Open the project folder:
+In termina add:
+
+cd final-project-Code-Buster-BSIT2b
+
+7.Open it in VS Code:
+
+In terminal add:
+
+code. 
+
+---
+
