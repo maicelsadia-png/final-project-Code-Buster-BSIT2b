@@ -131,3 +131,5 @@ final-project-Code-Buster-BSIT2b/
 | GET | /api/reviews | Admin | Get all reviews |
 | GET | /api/reviews/product/:id | Public | Get product reviews |
 | DELETE | /api/reviews/:id | Admin | Delete review |
+
+Render Link: https://quickserve-j4u8.onrender.com
