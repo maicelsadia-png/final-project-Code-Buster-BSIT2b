@@ -264,7 +264,7 @@
             const userId = localStorage.getItem('userId');
 
             try {
-                const response = await fetch(`http://localhost:3000/api/orders/user/${userId}`, {
+                const response = await fetch(`${window.API_BASE_URL||"http://localhost:3000/api"}/orders/user/${userId}`, {
                     headers: ordersAuthHeaders()
                 });
                 if (response.status === 401) { logout(); return; }
@@ -382,7 +382,7 @@
         document.getElementById('confirmCancelOrderBtn')?.addEventListener('click', async function() {
             if (!orderToCancel) return;
             try {
-                const res = await fetch(`http://localhost:3000/api/orders/${orderToCancel}/cancel`, {
+                const res = await fetch(`${window.API_BASE_URL||"http://localhost:3000/api"}/orders/${orderToCancel}/cancel`, {
                     method: 'PUT',
                     headers: ordersAuthHeaders()
                 });
@@ -408,7 +408,7 @@
                 recvBtn.disabled = true;
                 recvBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Updating...';
                 try {
-                    const res = await fetch(`http://localhost:3000/api/orders/${id}/received`, {
+                    const res = await fetch(`${window.API_BASE_URL||"http://localhost:3000/api"}/orders/${id}/received`, {
                         method: 'PUT',
                         headers: ordersAuthHeaders()
                     });
@@ -432,7 +432,7 @@
             if (hideBtn) {
                 const id = hideBtn.getAttribute('data-id');
                 try {
-                    await fetch(`http://localhost:3000/api/orders/${id}/user-hide`, {
+                    await fetch(`${window.API_BASE_URL||"http://localhost:3000/api"}/orders/${id}/user-hide`, {
                         method: 'DELETE',
                         headers: ordersAuthHeaders()
                     });
@@ -448,7 +448,7 @@
         document.getElementById('clearHistoryBtn')?.addEventListener('click', async function() {
             if (!confirm('Are you sure you want to clear your entire order history? This cannot be undone.')) return;
             try {
-                const res = await fetch('http://localhost:3000/api/orders/user/clear-history', {
+                const res = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/orders/user/clear-history', {
                     method: 'DELETE',
                     headers: ordersAuthHeaders()
                 });
@@ -536,7 +536,7 @@
 
                     const userName = localStorage.getItem('userName') || localStorage.getItem('username') || 'Anonymous';
 
-                    const res = await fetch('http://localhost:3000/api/reviews', {
+                    const res = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/reviews', {
                         method: 'POST',
                         headers,
                         body: JSON.stringify({ productId, productName, userId, userName, rating, comment })
