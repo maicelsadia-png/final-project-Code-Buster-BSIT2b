@@ -89,7 +89,7 @@ const products = [
 async function seedDatabase() {
     try {
         // Using your provided MongoDB URI
-        const mongoURI = 'mongodb+srv://GroupProject:websystemsfinalproject@cluster0.ewuovqj.mongodb.net/quickserve';
+        const mongoURI = 'mongodb+srv://GroupProject:CrumBelle2026@cluster0.ewuovqj.mongodb.net/crumbelle?retryWrites=true&w=majority';
         
         console.log('🔄 Connecting to MongoDB...');
         console.log('📦 Database: quickserve');
