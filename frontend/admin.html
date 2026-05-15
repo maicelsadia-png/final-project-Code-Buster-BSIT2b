@@ -797,9 +797,9 @@
         document.getElementById('confirmDeleteBtn')?.addEventListener('click', async function() {
             if (!currentDeleteId) return;
             let url = '';
-            if (currentDeleteType === 'product') url = `http://localhost:3000/api/products/${currentDeleteId}`;
-            else if (currentDeleteType === 'review') url = `http://localhost:3000/api/reviews/${currentDeleteId}`;
-            else if (currentDeleteType === 'user') url = `http://localhost:3000/api/users/${currentDeleteId}`;
+            if (currentDeleteType === 'product') url = `${window.API_BASE_URL||"http://localhost:3000/api"}/products/${currentDeleteId}`;
+            else if (currentDeleteType === 'review') url = `${window.API_BASE_URL||"http://localhost:3000/api"}/reviews/${currentDeleteId}`;
+            else if (currentDeleteType === 'user') url = `${window.API_BASE_URL||"http://localhost:3000/api"}/users/${currentDeleteId}`;
             
             try {
                 const res = await fetch(url, { method: 'DELETE', headers: adminHeaders() });
