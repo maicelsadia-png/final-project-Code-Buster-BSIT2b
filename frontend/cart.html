@@ -347,7 +347,7 @@
         headers['x-user-id'] = userId;
 
         try {
-            var response = await fetch('http://localhost:3000/api/orders', {
+            var response = await fetch((window.API_BASE_URL || (window.BACKEND_URL || 'http://localhost:3000') + '/api') + '/orders', {
                 method: 'POST',
                 headers: headers,
                 body: JSON.stringify({
@@ -390,7 +390,7 @@
 
         } catch(err) {
             console.error('Order error:', err);
-            showNotification('Connection error. Make sure the backend is running on port 3000.', 'error');
+            showNotification('Connection error. Please try again.', 'error');
             btn.disabled = false;
             btn.innerHTML = '<i class="fas fa-check-circle me-2"></i>Confirm Order';
         }
