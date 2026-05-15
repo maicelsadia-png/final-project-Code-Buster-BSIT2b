@@ -7,7 +7,7 @@ const bcrypt  = require('bcryptjs');
 const jwt     = require('jsonwebtoken');
 const { protect } = require('../middleware/auth');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'quickserve_secret_key_2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'crumbelle_secret_key_2026';
 
 // POST /api/auth/login - supports email OR username
 router.post('/login', async (req, res) => {

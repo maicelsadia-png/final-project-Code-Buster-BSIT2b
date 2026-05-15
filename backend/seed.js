@@ -17,7 +17,7 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model('Product', productSchema);
 
-// Product Data - 8 products for QuickServe
+// Product Data - 8 products for Crumbelle
 const products = [
     {
         name: "Signature Coffee",
@@ -82,6 +82,14 @@ const products = [
         stock: 12,
         image: "Cheesecake.jpg",
         category: "desserts"
+    },
+    {
+        name: "Nicka Maasim",
+        price: 149,
+        description: "Rich, aromatic black coffee with a bold and smooth finish. Perfectly brewed to energize your day.",
+        stock: 30,
+        image: "Nicka-Maasim.jpg",
+        category: "coffee"
     }
 ];
 
@@ -92,7 +100,7 @@ async function seedDatabase() {
         const mongoURI = 'mongodb+srv://GroupProject:CrumBelle2026@cluster0.ewuovqj.mongodb.net/crumbelle?retryWrites=true&w=majority';
         
         console.log('🔄 Connecting to MongoDB...');
-        console.log('📦 Database: quickserve');
+        console.log('📦 Database: crumbelle');
         await mongoose.connect(mongoURI);
         console.log('✅ Connected to MongoDB successfully');
         

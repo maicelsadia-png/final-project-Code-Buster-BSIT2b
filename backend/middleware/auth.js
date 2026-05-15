@@ -3,7 +3,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'quickserve_secret_key_2026';
+const JWT_SECRET = process.env.JWT_SECRET || 'crumbelle_secret_key_2026';
 
 const protect = async (req, res, next) => {
     let token = null;

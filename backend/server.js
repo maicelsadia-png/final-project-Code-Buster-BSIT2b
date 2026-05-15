@@ -1,9 +1,11 @@
 // server.js - Main server file
 
 require('dns').setServers(['8.8.8.8', '8.8.4.4']);
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config({ path: require('path').join(__dirname, '.env') });
-}
+// Always load .env (dotenv is a no-op if variables are already set in production)
+require('dotenv').config({ path: require('path').join(__dirname, '.env') });
+// Trim any accidental whitespace/carriage-returns from critical env vars
+if (process.env.MONGODB_URI) process.env.MONGODB_URI = process.env.MONGODB_URI.trim();
+if (process.env.JWT_SECRET)   process.env.JWT_SECRET   = process.env.JWT_SECRET.trim();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -80,11 +82,11 @@ async function seedAdmin() {
         // Create admin (password hashed by pre-save hook)
         await User.create({
             name: 'Admin',
-            email: 'admin@quickserve.com',
+            email: 'admin@crumbelle.com',
             password: 'admin123',
             role: 'admin'
         });
-        console.log('✅ Admin account created: admin@quickserve.com / admin123');
+        console.log('✅ Admin account created: admin@crumbelle.com / admin123');
 
     } catch (err) {
         console.error('Admin seed error:', err.message);
@@ -96,9 +98,9 @@ async function seedAdmin() {
 // ========================================
 app.get('/api', (req, res) => {
     res.json({
-        message: 'QuickServe API is running',
+        message: 'Crumbelle API is running',
         version: '2.0.0',
-        admin: 'admin@quickserve.com / admin123'
+        admin: 'admin@crumbelle.com / admin123'
     });
 });
 
@@ -151,5 +153,5 @@ app.listen(PORT, async () => {
         });
     }
 
-    console.log(`\n✅ QuickServe is ready!\n`);
+    console.log(`\n✅ Crumbelle is ready!\n`);
 });

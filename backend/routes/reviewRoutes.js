@@ -4,36 +4,63 @@ const express = require('express');
 const router = express.Router();
 const Review = require('../models/Review');
 const Order  = require('../models/Order');
+const Product = require('../models/Product');
+const mongoose = require('mongoose');
 const { protect } = require('../middleware/auth');
 const admin = require('../middleware/admin');
 
 // POST /api/reviews - Create review (authenticated, must have purchased)
 router.post('/', protect, async (req, res) => {
     try {
-        const { productId, rating, comment } = req.body;
-        if (!productId || !rating || !comment) {
-            return res.status(400).json({ success: false, message: 'Product, rating, and comment are required' });
+        let { productId, productName, rating, comment } = req.body;
+        if (!rating || !comment) {
+            return res.status(400).json({ success: false, message: 'Rating and comment are required' });
         }
 
-        // Check: user must have ordered this product
-        const hasPurchased = await Order.findOne({
+        // Resolve productId — if missing/invalid, look up by name
+        let resolvedProductId = null;
+        if (productId && mongoose.Types.ObjectId.isValid(productId)) {
+            resolvedProductId = new mongoose.Types.ObjectId(productId);
+        } else if (productName) {
+            const product = await Product.findOne({ name: new RegExp('^' + productName.trim() + '$', 'i') });
+            if (!product) {
+                return res.status(400).json({ success: false, message: `Product "${productName}" not found.` });
+            }
+            resolvedProductId = product._id;
+        } else {
+            return res.status(400).json({ success: false, message: 'Product could not be identified.' });
+        }
+
+        // Check: user must have a completed/received/ready order containing this product
+        // First try matching by productId stored in order
+        let hasPurchased = await Order.findOne({
             userId: req.user._id,
-            'products.productId': productId,
-            status: { $in: ['delivered', 'confirmed', 'shipped'] }
+            'products.productId': resolvedProductId,
+            status: { $in: ['completed', 'received', 'ready'] }
         });
+
+        // Fallback: match by product name (for old orders saved without productId)
+        if (!hasPurchased && productName) {
+            hasPurchased = await Order.findOne({
+                userId: req.user._id,
+                'products.name': new RegExp('^' + productName.trim() + '$', 'i'),
+                status: { $in: ['completed', 'received', 'ready'] }
+            });
+        }
+
         if (!hasPurchased) {
             return res.status(403).json({ success: false, message: 'You can only review products you have purchased and received.' });
         }
 
         // Check: not already reviewed
-        const existing = await Review.findOne({ userId: req.user._id, productId });
+        const existing = await Review.findOne({ userId: req.user._id, productId: resolvedProductId });
         if (existing) {
             return res.status(400).json({ success: false, message: 'You have already reviewed this product' });
         }
 
         const review = await Review.create({
             userId:   req.user._id,
-            productId,
+            productId: resolvedProductId,
             userName: req.user.name,
             rating:   parseInt(rating),
             comment:  comment.trim()

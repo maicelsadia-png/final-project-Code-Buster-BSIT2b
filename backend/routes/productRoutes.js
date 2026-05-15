@@ -55,6 +55,24 @@ router.post('/upload-image', protect, admin, upload.single('image'), (req, res) 
 });
 
 // GET /api/products - Public menu
+// Helper: if a product has an /uploads/ image but no imageData, read the file and return base64.
+// Also saves it back to the DB so future requests don't need to re-read the file.
+async function injectImageData(product) {
+    if (product.imageData || !product.image || !product.image.startsWith('/uploads/')) return product;
+    const filePath = path.join(__dirname, '..', 'uploads', path.basename(product.image));
+    if (!fs.existsSync(filePath)) return product;
+    try {
+        const ext  = path.extname(filePath).toLowerCase().replace('.', '');
+        const mime = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg';
+        const b64  = fs.readFileSync(filePath).toString('base64');
+        const dataUri = `data:${mime};base64,${b64}`;
+        // Save back to DB so next request is instant
+        await Product.findByIdAndUpdate(product._id, { imageData: dataUri });
+        product.imageData = dataUri;
+    } catch (e) { /* file unreadable, skip */ }
+    return product;
+}
+
 router.get('/', async (req, res) => {
     try {
         const { category, search } = req.query;
@@ -62,7 +80,9 @@ router.get('/', async (req, res) => {
         if (category && category !== 'all') query.category = category;
         if (search) query.name = { $regex: search, $options: 'i' };
         const products = await Product.find(query).sort({ createdAt: -1 });
-        res.json(products);
+        // Inject imageData for any uploaded-image products that are missing it
+        const fixed = await Promise.all(products.map(p => injectImageData(p)));
+        res.json(fixed);
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
@@ -73,6 +93,7 @@ router.get('/:id', async (req, res) => {
     try {
         const product = await Product.findById(req.params.id);
         if (!product) return res.status(404).json({ success: false, message: 'Item not found' });
+        await injectImageData(product);
         res.json(product);
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
