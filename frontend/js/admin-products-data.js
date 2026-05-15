@@ -89,7 +89,7 @@ async function loadProducts() {
                     <i class="fas fa-exclamation-triangle fa-3x mb-3"></i>
                     <h4>Failed to load products</h4>
                     <p>Error: ${error.message}</p>
-                    <p>Make sure backend is running on port 3000.</p>
+                    <p>Connection error. Please try again.</p>
                     <button class="btn btn-primary mt-3" onclick="location.reload()">Try Again</button>
                 </div>
             `;

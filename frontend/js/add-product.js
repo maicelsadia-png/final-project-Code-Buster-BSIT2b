@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showNotification(data.message || 'Failed to add product', 'error');
             }
         } catch (error) {
-            showNotification('Connection error. Backend must be running on port 3000.', 'error');
+            showNotification('Connection error. Please try again.', 'error');
         } finally {
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;

@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 submitBtn.innerHTML = originalText;
             }
         } catch (error) {
-            showNotification('Connection error. Backend must be running on port 3000.', 'error');
+            showNotification('Connection error. Please try again.', 'error');
             submitBtn.disabled = false;
             submitBtn.innerHTML = originalText;
         }

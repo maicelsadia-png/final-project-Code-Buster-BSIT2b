@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     showNotification(data.message || 'Failed to update profile', 'error');
                 }
             } catch (err) {
-                showNotification('Connection error. Backend must be running on port 3000.', 'error');
+                showNotification('Connection error. Please try again.', 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = orig;
@@ -122,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     btn.innerHTML = orig;
                 }
             } catch (err) {
-                showNotification('Connection error. Backend must be running on port 3000.', 'error');
+                showNotification('Connection error. Please try again.', 'error');
                 btn.disabled = false;
                 btn.innerHTML = orig;
             }

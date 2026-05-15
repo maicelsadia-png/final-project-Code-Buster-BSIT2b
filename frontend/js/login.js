@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 btn.innerHTML = orig;
             }
         } catch (error) {
-            showNotification('Connection error. Make sure the backend is running on port 3000.', 'error');
+            showNotification('Connection error. Please try again.', 'error');
             btn.disabled = false;
             btn.innerHTML = orig;
         }
