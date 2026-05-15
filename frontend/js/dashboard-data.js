@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Verify session from server
     if (token) {
         try {
-            var meResp = await fetch('https://quickserve-j4u8.onrender.com/api/auth/me', {
+            var meResp = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/auth/me', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (meResp.ok) {
@@ -84,7 +84,7 @@ async function loadUserOrders(userId, token) {
         if (token)  headers['Authorization'] = 'Bearer ' + token;
         headers['x-user-id'] = userId;
 
-        var resp = await fetch('https://quickserve-j4u8.onrender.com/api/orders/user/' + userId, { headers: headers });
+        var resp = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/orders/user/' + userId, { headers: headers });
         if (resp.status === 401) {
             ['token','userId','userName','userEmail','userRole','isLoggedIn']
                 .forEach(function(k){ localStorage.removeItem(k); });
@@ -94,10 +94,11 @@ async function loadUserOrders(userId, token) {
 
         _allOrders = await resp.json();
 
-        // ── Stat cards (Fix: removed avgWaitTime) ────────────────────────────
-        var totalEl  = document.getElementById('totalOrders');
-        var spentEl  = document.getElementById('totalSpent');
-        var activeEl = document.getElementById('pendingDelivery');
+        // ── Stat cards ────────────────────────────────────────────────────────
+        var totalEl   = document.getElementById('totalOrders');
+        var spentEl   = document.getElementById('totalSpent');
+        var activeEl  = document.getElementById('pendingDelivery');
+        var waitEl    = document.getElementById('avgWaitTime');
 
         if (totalEl) totalEl.textContent = _allOrders.length;
 
@@ -107,10 +108,42 @@ async function loadUserOrders(userId, token) {
             .reduce(function(s, o) { return s + (o.totalAmount || 0); }, 0);
         if (spentEl) spentEl.textContent = '₱' + spent.toFixed(2);
 
-        var active = _allOrders.filter(function(o) {
+        var activeOrders = _allOrders.filter(function(o) {
             return ['pending','preparing','ready'].includes(o.status);
-        }).length;
-        if (activeEl) activeEl.textContent = active;
+        });
+        if (activeEl) activeEl.textContent = activeOrders.length;
+
+        // ── Average Waiting Time (active orders only) ─────────────────────────
+        // Estimate: each active order takes ~10 mins base prep time.
+        // Orders that are "ready" are done preparing — estimated wait is ~0–2 mins.
+        // Orders "preparing" — about half of base time remaining (~5 mins).
+        // Orders "pending"   — full base time (~10 mins).
+        // We show the average across all active orders.
+        if (waitEl) {
+            if (activeOrders.length === 0) {
+                waitEl.textContent = '—';
+            } else {
+                var BASE_PREP = 10; // minutes
+                var totalMins = activeOrders.reduce(function(sum, o) {
+                    var now = Date.now();
+                    var created = new Date(o.createdAt).getTime();
+                    var elapsedMins = (now - created) / 60000;
+                    var estimated;
+                    if (o.status === 'ready') {
+                        estimated = 2; // nearly done
+                    } else if (o.status === 'preparing') {
+                        // remaining = base - elapsed, but at least 1 min
+                        estimated = Math.max(1, Math.round(BASE_PREP - elapsedMins));
+                    } else {
+                        // pending: full base time remaining
+                        estimated = Math.max(1, Math.round(BASE_PREP * 1.5 - elapsedMins));
+                    }
+                    return sum + estimated;
+                }, 0);
+                var avg = Math.round(totalMins / activeOrders.length);
+                waitEl.textContent = avg + ' min' + (avg !== 1 ? 's' : '');
+            }
+        }
 
         renderOrderList();
 

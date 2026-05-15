@@ -1,6 +1,6 @@
 // auth-guard.js - Auth utilities, route protection, and navbar updater
 
-const API_BASE = 'https://quickserve-j4u8.onrender.com/api';
+
 
 // ─── GET AUTH HEADERS ────────────────────────────────────────────────────────
 function getAuthHeaders() {
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     var stored = localStorage.getItem('isLoggedIn');
     if (stored === 'true' && token) {
         try {
-            var r = await fetch('https://quickserve-j4u8.onrender.com/api/auth/me', {
+            var r = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/auth/me', {
                 headers: { 'Authorization': 'Bearer ' + token }
             });
             if (!r.ok) {
@@ -178,7 +178,7 @@ async function checkForReadyOrders() {
         var headers = { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token };
         headers['x-user-id'] = userId;
 
-        var response = await fetch('https://quickserve-j4u8.onrender.com/api/orders/user/' + userId, { headers: headers });
+        var response = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/orders/user/' + userId, { headers: headers });
         if (!response.ok) return;
 
         var orders = await response.json();

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickServe | My Orders</title>
+    <title>Crumbelle | My Orders</title>
     
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,7 +22,7 @@
         <div class="container">
             <a class="navbar-brand" href="index.html">
                 <i class="fas fa-mug-hot me-2"></i>
-                <span>QuickServe</span>
+                <span>Crumbelle</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -126,12 +126,50 @@
         </div>
     </div>
 
+    <!-- Write a Review Modal -->
+    <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background:var(--primary);color:#fff;border-radius:12px 12px 0 0;">
+                    <h5 class="modal-title" id="reviewModalLabel"><i class="fas fa-star me-2"></i>Write a Review</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-muted mb-3" id="reviewModalProductName" style="font-weight:600;font-size:1rem;"></p>
+                    <input type="hidden" id="reviewModalProductId">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Your Rating</label>
+                        <div class="d-flex gap-2" id="starRatingContainer" style="font-size:1.8rem;cursor:pointer;">
+                            <span class="star-btn" data-val="1">☆</span>
+                            <span class="star-btn" data-val="2">☆</span>
+                            <span class="star-btn" data-val="3">☆</span>
+                            <span class="star-btn" data-val="4">☆</span>
+                            <span class="star-btn" data-val="5">☆</span>
+                        </div>
+                        <input type="hidden" id="reviewModalRating" value="0">
+                    </div>
+                    <div class="mb-3">
+                        <label for="reviewModalComment" class="form-label fw-semibold">Your Review</label>
+                        <textarea class="form-control" id="reviewModalComment" rows="4" placeholder="Share your experience with this product..." maxlength="500"></textarea>
+                        <small class="text-muted"><span id="charCount">0</span>/500 characters</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="submitReviewBtn">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Review
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5><i class="fas fa-mug-hot me-2"></i>QuickServe</h5>
+                    <h5><i class="fas fa-mug-hot me-2"></i>Crumbelle</h5>
                     <p>Fast. Smooth. Effortless ordering experience. Serving happiness with every order.</p>
                 </div>
                 <div class="col-md-2">
@@ -153,13 +191,13 @@
                 <div class="col-md-3">
                     <h5>Contact Us</h5>
                     <ul>
-                        <li><i class="fas fa-envelope me-2"></i> support@quickserve.com</li>
+                        <li><i class="fas fa-envelope me-2"></i> support@crumbelle.com</li>
                         <li><i class="fas fa-phone me-2"></i> +63 2 1234 5678</li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 QuickServe Ordering System. All rights reserved.</p>
+                <p>&copy; 2026 Crumbelle Ordering System. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -168,6 +206,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Custom JS -->
+    <script src="js/config.js"></script>
     <script src="js/app.js"></script>
     <script src="js/auth-guard.js"></script>
     
@@ -194,19 +233,20 @@
 
         // Resolve order item image - handles /uploads/ paths, base64, and local filenames
         function resolveOrderImage(item) {
-            if (!item) return 'img/products/placeholder.jpg';
+            var base = (window.BACKEND_URL || 'http://localhost:3000');
+            if (!item) return base + '/img/products/placeholder.jpg';
             // Full URL - use directly
             if (item.image && (item.image.startsWith('http://') || item.image.startsWith('https://'))) return item.image;
             // Backend /uploads/ path
-            if (item.image && item.image.startsWith('/uploads/')) return 'https://quickserve-j4u8.onrender.com' + item.image;
+            if (item.image && item.image.startsWith('/uploads/')) return base + item.image;
             // Base64
             if (item.imageData && item.imageData.startsWith('data:')) return item.imageData;
             if (item.image && item.image.startsWith('data:')) return item.image;
-            // Already has relative path prefix (img/products/...)
-            if (item.image && item.image.startsWith('img/')) return item.image;
+            // Already has img/ prefix
+            if (item.image && item.image.startsWith('img/')) return base + '/' + item.image;
             // Plain filename
-            if (item.image && item.image !== 'placeholder.jpg') return 'img/products/' + item.image;
-            return 'img/products/placeholder.jpg';
+            if (item.image && item.image !== 'placeholder.jpg') return base + '/img/products/' + item.image;
+            return base + '/img/products/placeholder.jpg';
         }
 
         async function loadAllOrders() {
@@ -224,7 +264,7 @@
             const userId = localStorage.getItem('userId');
 
             try {
-                const response = await fetch(`https://quickserve-j4u8.onrender.com/api/orders/user/${userId}`, {
+                const response = await fetch(`http://localhost:3000/api/orders/user/${userId}`, {
                     headers: ordersAuthHeaders()
                 });
                 if (response.status === 401) { logout(); return; }
@@ -249,6 +289,21 @@
                 container.innerHTML = '';
 
                 orders.forEach(order => {
+                    const isReviewable = (order.status === 'completed' || order.status === 'received');
+                    // Build review buttons per product for reviewable orders
+                    const reviewButtons = isReviewable && order.products
+                        ? order.products.map(item => {
+                            const pid  = item.productId || '';
+                            const pname = item.name || 'Product';
+                            return `<button class="btn btn-sm write-review-btn mt-1"
+                                data-product-id="${pid}"
+                                data-product-name="${pname}"
+                                style="background:var(--primary);color:#fff;border:none;border-radius:8px;padding:4px 12px;font-size:.8rem;cursor:pointer;display:inline-flex;align-items:center;gap:5px;">
+                                <i class="fas fa-star"></i> Review ${pname}
+                              </button>`;
+                          }).join('')
+                        : '';
+
                     const orderCard = `
                         <div class="order-card" data-order-id="${order._id}">
                             <div class="order-header">
@@ -266,7 +321,7 @@
                                         <div class="order-items">
                                             ${order.products ? order.products.map(item => `
                                                 <div class="order-item">
-                                                    <img src="${resolveOrderImage(item)}" alt="${item.name || 'Product'}" class="order-item-img" onerror="this.onerror=null;this.src='img/products/placeholder.jpg'">
+                                                    <img src="${resolveOrderImage(item)}" alt="${item.name || 'Product'}" class="order-item-img" onerror="this.onerror=null;this.src=(window.BACKEND_URL||'http://localhost:3000')+'/img/products/placeholder.jpg'">
                                                     <div class="order-item-details">
                                                         <h6>${item.name || 'Product'}</h6>
                                                         <p>Qty: ${item.quantity} &times; &#8369;${(item.price || 0).toFixed(2)}</p>
@@ -285,6 +340,7 @@
                                                 ${(order.status === 'ready' || order.status === 'completed') ? `<button class="btn btn-sm mark-received-btn" data-id="${order._id}" style="background:#27AE60;color:#fff;border:none;border-radius:8px;padding:5px 14px;font-size:.82rem;cursor:pointer;"><i class='fas fa-check me-1'></i>Order Received</button>` : ''}
                                                 ${(order.status !== 'received' && order.status !== 'completed') ? `<button class="btn btn-sm hide-order-btn" data-id="${order._id}" style="background:transparent;color:#aaa;border:1px solid #ddd;border-radius:8px;padding:4px 10px;font-size:.78rem;cursor:pointer;" title="Remove from history"><i class="fas fa-eye-slash"></i></button>` : ''}
                                             </div>
+                                            ${reviewButtons ? `<div class="mt-2 review-buttons-wrap">${reviewButtons}</div>` : ''}
                                         </div>
                                     </div>
                                 </div>
@@ -298,6 +354,15 @@
                     btn.addEventListener('click', function() {
                         orderToCancel = this.getAttribute('data-id');
                         new bootstrap.Modal(document.getElementById('deleteConfirmModal')).show();
+                    });
+                });
+
+                // Attach Write Review buttons
+                container.querySelectorAll('.write-review-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const productId   = this.getAttribute('data-product-id');
+                        const productName = this.getAttribute('data-product-name');
+                        openReviewModal(productId, productName);
                     });
                 });
 
@@ -317,7 +382,7 @@
         document.getElementById('confirmCancelOrderBtn')?.addEventListener('click', async function() {
             if (!orderToCancel) return;
             try {
-                const res = await fetch(`https://quickserve-j4u8.onrender.com/api/orders/${orderToCancel}/cancel`, {
+                const res = await fetch(`http://localhost:3000/api/orders/${orderToCancel}/cancel`, {
                     method: 'PUT',
                     headers: ordersAuthHeaders()
                 });
@@ -343,7 +408,7 @@
                 recvBtn.disabled = true;
                 recvBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Updating...';
                 try {
-                    const res = await fetch(`https://quickserve-j4u8.onrender.com/api/orders/${id}/received`, {
+                    const res = await fetch(`http://localhost:3000/api/orders/${id}/received`, {
                         method: 'PUT',
                         headers: ordersAuthHeaders()
                     });
@@ -367,7 +432,7 @@
             if (hideBtn) {
                 const id = hideBtn.getAttribute('data-id');
                 try {
-                    await fetch(`https://quickserve-j4u8.onrender.com/api/orders/${id}/user-hide`, {
+                    await fetch(`http://localhost:3000/api/orders/${id}/user-hide`, {
                         method: 'DELETE',
                         headers: ordersAuthHeaders()
                     });
@@ -383,7 +448,7 @@
         document.getElementById('clearHistoryBtn')?.addEventListener('click', async function() {
             if (!confirm('Are you sure you want to clear your entire order history? This cannot be undone.')) return;
             try {
-                const res = await fetch('https://quickserve-j4u8.onrender.com/api/orders/user/clear-history', {
+                const res = await fetch('http://localhost:3000/api/orders/user/clear-history', {
                     method: 'DELETE',
                     headers: ordersAuthHeaders()
                 });
@@ -396,6 +461,111 @@
             } catch (err) {
                 showNotification('Connection error', 'error');
             }
+        });
+
+        // ── Review Modal Logic ──────────────────────────────────────────────
+        let selectedRating = 0;
+
+        function openReviewModal(productId, productName) {
+            document.getElementById('reviewModalProductId').value = productId;
+            document.getElementById('reviewModalProductName').textContent = 'Reviewing: ' + productName;
+            document.getElementById('reviewModalComment').value = '';
+            document.getElementById('charCount').textContent = '0';
+            selectedRating = 0;
+            updateStars(0);
+            new bootstrap.Modal(document.getElementById('reviewModal')).show();
+        }
+
+        function updateStars(val) {
+            document.querySelectorAll('.star-btn').forEach(s => {
+                const sv = parseInt(s.getAttribute('data-val'));
+                s.textContent = sv <= val ? '★' : '☆';
+                s.style.color  = sv <= val ? '#D4A13E' : '#ccc';
+            });
+            document.getElementById('reviewModalRating').value = val;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Star click handler
+            document.querySelectorAll('.star-btn').forEach(star => {
+                star.addEventListener('click', function() {
+                    selectedRating = parseInt(this.getAttribute('data-val'));
+                    updateStars(selectedRating);
+                });
+                star.addEventListener('mouseover', function() {
+                    updateStars(parseInt(this.getAttribute('data-val')));
+                });
+                star.addEventListener('mouseout', function() {
+                    updateStars(selectedRating);
+                });
+            });
+
+            // Character count
+            document.getElementById('reviewModalComment')?.addEventListener('input', function() {
+                document.getElementById('charCount').textContent = this.value.length;
+            });
+
+            // Submit review
+            document.getElementById('submitReviewBtn')?.addEventListener('click', async function() {
+                const productId   = document.getElementById('reviewModalProductId').value;
+                const productName = document.getElementById('reviewModalProductName').textContent.replace('Reviewing: ', '').trim();
+                const rating      = parseInt(document.getElementById('reviewModalRating').value);
+                const comment     = document.getElementById('reviewModalComment').value.trim();
+
+                if (!rating || rating < 1) {
+                    showNotification('Please select a star rating', 'error'); return;
+                }
+                if (!comment) {
+                    showNotification('Please write your review', 'error'); return;
+                }
+
+                const token  = localStorage.getItem('token');
+                const userId = localStorage.getItem('userId');
+                if (!userId) {
+                    showNotification('Please login to submit a review', 'error'); return;
+                }
+
+                const btn = this;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Submitting...';
+
+                try {
+                    const headers = { 'Content-Type': 'application/json' };
+                    if (token)  headers['Authorization'] = 'Bearer ' + token;
+                    if (userId) headers['x-user-id'] = userId;
+
+                    const userName = localStorage.getItem('userName') || localStorage.getItem('username') || 'Anonymous';
+
+                    const res = await fetch('http://localhost:3000/api/reviews', {
+                        method: 'POST',
+                        headers,
+                        body: JSON.stringify({ productId, productName, userId, userName, rating, comment })
+                    });
+
+                    const data = await res.json();
+
+                    if (res.ok) {
+                        bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+                        showNotification('Review submitted! Thank you for your feedback.', 'success');
+                    } else {
+                        showNotification(data.message || 'Failed to submit review', 'error');
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Review';
+                    }
+                } catch (err) {
+                    showNotification('Connection error. Backend must be running on port 3000.', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Review';
+                }
+            });
+
+            // Reset modal state on close
+            document.getElementById('reviewModal')?.addEventListener('hidden.bs.modal', function() {
+                selectedRating = 0;
+                updateStars(0);
+                document.getElementById('submitReviewBtn').disabled = false;
+                document.getElementById('submitReviewBtn').innerHTML = '<i class="fas fa-paper-plane me-2"></i>Submit Review';
+            });
         });
     </script>
 </body>

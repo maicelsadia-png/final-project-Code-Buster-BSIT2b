@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (token)  headers['Authorization'] = 'Bearer ' + token;
                 headers['x-user-id'] = userId;
 
-                var response = await fetch('https://quickserve-j4u8.onrender.com/api/users/' + userId, {
+                var response = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/users/' + userId, {
                     method: 'PUT',
                     headers: headers,
                     body: JSON.stringify({ name: name, email: email, username: username, phone: phone })
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (token) headers['Authorization'] = 'Bearer ' + token;
                 headers['x-user-id'] = userId;
 
-                var response = await fetch('https://quickserve-j4u8.onrender.com/api/users/' + userId + '/password', {
+                var response = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/users/' + userId + '/password', {
                     method: 'PUT',
                     headers: headers,
                     body: JSON.stringify({ currentPassword: currentPassword, newPassword: newPassword })
@@ -138,7 +138,7 @@ async function loadUserProfile(userId) {
         if (token) headers['Authorization'] = 'Bearer ' + token;
         headers['x-user-id'] = userId;
 
-        var res = await fetch('https://quickserve-j4u8.onrender.com/api/users/' + userId, { headers: headers });
+        var res = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/users/' + userId, { headers: headers });
         if (!res.ok) return;
         var user = await res.json();
 

@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating Account...';
 
         try {
-            const response = await fetch('https://quickserve-j4u8.onrender.com/api/users', {
+            const response = await fetch((window.API_BASE_URL||(window.BACKEND_URL||'http://localhost:3000')+'/api')+'/users', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, username, email, password })

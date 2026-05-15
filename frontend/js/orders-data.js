@@ -16,22 +16,22 @@ function statusBadge(status) {
 }
 
 // Fix #1: Resolve product image - handles backend /uploads/ paths, base64, and local filenames
-var API_BASE = 'https://quickserve-j4u8.onrender.com';
+
 function resolveOrderItemImage(item) {
-    if (!item) return 'img/products/placeholder.jpg';
+    var base = (window.BACKEND_URL || 'http://localhost:3000');
+    if (!item) return base + '/img/products/placeholder.jpg';
     // Full URL - use directly
     if (item.image && (item.image.startsWith('http://') || item.image.startsWith('https://'))) return item.image;
-    // New: backend-uploaded image path
-    if (item.image && item.image.startsWith('/uploads/')) return API_BASE + item.image;
-    // Legacy: base64 stored on item
+    // Backend-uploaded image path
+    if (item.image && item.image.startsWith('/uploads/')) return base + item.image;
+    // Base64 stored on item
     if (item.imageData && item.imageData.startsWith('data:')) return item.imageData;
-    if (item.image && item.image.startsWith('data:'))        return item.image;
-    // Legacy: filename
-    // Already resolved path
-    if (item.image && item.image.startsWith('img/')) return item.image;
+    if (item.image && item.image.startsWith('data:')) return item.image;
+    // Already has img/ prefix
+    if (item.image && item.image.startsWith('img/')) return base + '/' + item.image;
     // Plain filename
-    if (item.image && item.image !== 'placeholder.jpg')      return 'img/products/' + item.image;
-    return 'img/products/placeholder.jpg';
+    if (item.image && item.image !== 'placeholder.jpg') return base + '/img/products/' + item.image;
+    return base + '/img/products/placeholder.jpg';
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
@@ -64,7 +64,7 @@ async function loadOrdersByStatus(status, containerId) {
     var userId = localStorage.getItem('userId');
 
     try {
-        var response = await fetch('https://quickserve-j4u8.onrender.com/api/orders/user/' + userId, {
+        var response = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/orders/user/' + userId, {
             headers: ordersAuthHeaders()
         });
         if (response.status === 401) { logout(); return; }
@@ -144,7 +144,7 @@ async function loadOrdersByStatus(status, containerId) {
                 if (!confirm('Cancel this order?')) return;
                 var orderId = this.getAttribute('data-id');
                 try {
-                    var res = await fetch('https://quickserve-j4u8.onrender.com/api/orders/'+orderId+'/cancel',
+                    var res = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/orders/'+orderId+'/cancel',
                         {method:'PUT',headers:ordersAuthHeaders()});
                     if (res.ok) { showNotification('Order cancelled','info'); await loadAllOrders(); }
                     else { var d=await res.json(); showNotification(d.message||'Cannot cancel','error'); }

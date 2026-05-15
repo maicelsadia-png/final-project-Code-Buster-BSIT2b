@@ -26,7 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Signing in...';
 
         try {
-            const response = await fetch('https://quickserve-j4u8.onrender.com/api/auth/login', {
+            const response = await fetch((window.API_BASE_URL||(window.BACKEND_URL||'http://localhost:3000')+'/api')+'/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: identifier, password })

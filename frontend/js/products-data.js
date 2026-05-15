@@ -2,23 +2,24 @@
 
 console.log('🔥 products-data.js loaded');
 
-var BACKEND_URL = 'https://quickserve-j4u8.onrender.com';
 
-// Resolve product image to a public URL
+
+// Resolve product image to an absolute public URL
 function getProductImageSrc(product) {
-    // New: backend-uploaded image stored as /uploads/filename
+    var base = (window.BACKEND_URL || 'http://localhost:3000');
     if (product.image && product.image.startsWith('/uploads/')) {
-        return BACKEND_URL + product.image;
+        return base + product.image;
     }
-    // Legacy: base64 imageData stored in DB
+    if (product.image && (product.image.startsWith('http://') || product.image.startsWith('https://'))) {
+        return product.image;
+    }
     if (product.imageData && product.imageData.startsWith('data:')) {
         return product.imageData;
     }
-    // Legacy: local filename stored as image field (seeded products)
     if (product.image && product.image !== 'placeholder.jpg') {
-        return 'img/products/' + product.image;
+        return base + '/img/products/' + product.image;
     }
-    return 'img/products/placeholder.jpg';
+    return base + '/img/products/placeholder.jpg';
 }
 
 document.addEventListener('DOMContentLoaded', async function() {
@@ -71,7 +72,7 @@ async function loadProducts() {
                      data-name="${product.name}">
                     <div class="product-card">
                         <div class="product-img">
-                            <img src="${imgSrc}" alt="${product.name}" class="img-fluid" onerror="this.src='img/products/placeholder.jpg'">
+                            <img src="${imgSrc}" alt="${product.name}" class="img-fluid" onerror="this.onerror=null;this.src=(window.BACKEND_URL||'http://localhost:3000')+'/img/products/placeholder.jpg'">
                         </div>
                         <div class="product-body">
                             <h5>${escapeHtml(product.name)}</h5>
@@ -83,7 +84,8 @@ async function loadProducts() {
                                         data-product-id="${product._id}" 
                                         data-product-name="${escapeHtml(product.name)}" 
                                         data-product-price="${product.price}"
-                                        data-product-image="${imgSrc}">
+                                        data-product-image="${product.image || ''}"
+                                        data-image-data="${product.imageData ? encodeURIComponent(product.imageData) : ''}">
                                     <i class="fas fa-cart-plus"></i> Add
                                 </button>
                             </div>

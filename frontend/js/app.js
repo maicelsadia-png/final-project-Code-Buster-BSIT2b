@@ -1,5 +1,5 @@
 /**
- * QuickServe - app.js
+ * Crumbelle - app.js
  * Fix #2: Cart isolated per user via userId-scoped localStorage key
  */
 
@@ -80,12 +80,13 @@ function getCartTotal() {
 }
 
 // ── Cart CRUD ─────────────────────────────────────────────────────────────────
-function addToCart(id, name, price, quantity, image) {
-    quantity = quantity || 1;
-    image    = image    || null;
+function addToCart(id, name, price, quantity, image, imageData) {
+    quantity  = quantity  || 1;
+    image     = image     || null;
+    imageData = imageData || null;
     var ex = cart.find(function(i){ return i.id==id; });
-    if (ex) { ex.quantity+=quantity; if(image&&!ex.image) ex.image=image; }
-    else cart.push({id:id,name:name,price:price,quantity:quantity,image:image});
+    if (ex) { ex.quantity+=quantity; if(image&&!ex.image) ex.image=image; if(imageData&&!ex.imageData) ex.imageData=imageData; }
+    else cart.push({id:id,name:name,price:price,quantity:quantity,image:image,imageData:imageData});
     saveCartToStorage();
     updateCartBadges();
     if (onCartPage()) renderCartPage();
@@ -113,20 +114,21 @@ function updateCartQuantity(id, qty) {
 
 // Fix #1: Image resolution for cart items - handles /uploads/, full URLs, base64, relative, and local filenames
 function resolveImage(item) {
-    if (!item || !item.image) return 'img/products/placeholder.jpg';
+    var base = (window.BACKEND_URL || 'http://localhost:3000');
+    if (!item || !item.image) return base + '/img/products/placeholder.jpg';
     // Needs re-fetch (base64 was stripped to save localStorage space)
-    if (item.image === '__needsfetch__') return 'img/products/placeholder.jpg';
+    if (item.image === '__needsfetch__') return base + '/img/products/placeholder.jpg';
     // Full URL (http://...) - use directly
     if (item.image.startsWith('http://') || item.image.startsWith('https://')) return item.image;
     // Backend /uploads/ path
-    if (item.image.startsWith('/uploads/')) return 'https://quickserve-j4u8.onrender.com' + item.image;
+    if (item.image.startsWith('/uploads/')) return base + item.image;
     // Base64 (still in memory, not yet saved)
     if (item.image.startsWith('data:')) return item.image;
-    // Already has relative path prefix (img/products/...)
-    if (item.image.startsWith('img/')) return item.image;
+    // Already has absolute img/products/ prefix stored from older cart entries
+    if (item.image.startsWith('img/')) return base + '/' + item.image;
     // Plain filename - prepend products folder
-    if (item.image !== 'placeholder.jpg') return 'img/products/' + item.image;
-    return 'img/products/placeholder.jpg';
+    if (item.image !== 'placeholder.jpg') return base + '/img/products/' + item.image;
+    return base + '/img/products/placeholder.jpg';
 }
 
 // ── Render cart page ──────────────────────────────────────────────────────────
@@ -155,7 +157,7 @@ function renderCartPage() {
             '<div class="row align-items-center">'+
                 '<div class="col-md-2 col-4">'+
                     '<img src="'+escapeHtml(imgSrc)+'" alt="'+escapeHtml(item.name)+'" class="cart-item-img"'+
-                    ' onerror="this.onerror=null;this.src=\'img/products/placeholder.jpg\'">'+
+                    ' onerror="this.onerror=null;this.src=\''+(window.BACKEND_URL||'http://localhost:3000')+'/img/products/placeholder.jpg\'">'+
                 '</div>'+
                 '<div class="col-md-4 col-8">'+
                     '<h5 class="cart-item-title">'+escapeHtml(item.name)+'</h5>'+
@@ -194,16 +196,17 @@ async function fetchMissingCartImages() {
     for (var i = 0; i < needsFetch.length; i++) {
         var item = needsFetch[i];
         try {
-            var resp = await fetch('https://quickserve-j4u8.onrender.com/api/products/' + item.id);
+            var resp = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/products/' + item.id);
             if (!resp.ok) continue;
             var product = await resp.json();
             var imgSrc = '';
+            var base = (window.BACKEND_URL||'http://localhost:3000');
             if (product.image && product.image.startsWith('/uploads/')) {
-                imgSrc = 'https://quickserve-j4u8.onrender.com' + product.image;
+                imgSrc = base + product.image;
             } else if (product.imageData && product.imageData.startsWith('data:')) {
                 imgSrc = product.imageData;
             } else if (product.image && product.image !== 'placeholder.jpg') {
-                imgSrc = 'img/products/' + product.image;
+                imgSrc = base + '/img/products/' + product.image;
             }
             if (imgSrc) {
                 // Update in-memory cart
@@ -273,7 +276,7 @@ function updateOrderSummaryDisplay(subtotal) {
     if(delivEl) delivEl.textContent = '₱'+delivery.toFixed(2);
     if(totalEl) totalEl.textContent = '₱'+total.toFixed(2);
     if(hidTotal)hidTotal.value      = total.toFixed(2);
-    if(hidItems)hidItems.value      = JSON.stringify(cart.map(function(i){return{productId:i.id,quantity:i.quantity};}));
+    if(hidItems)hidItems.value      = JSON.stringify(cart.map(function(i){return{productId:i.id,name:i.name,price:i.price,quantity:i.quantity,image:i.image,imageData:i.imageData||null};}));
 }
 
 // ── Add-to-cart buttons ───────────────────────────────────────────────────────
@@ -290,10 +293,12 @@ function handleAddToCart(e) {
     var name  = this.getAttribute('data-product-name')||this.getAttribute('data-name');
     var price = parseFloat(this.getAttribute('data-product-price')||this.getAttribute('data-price')||0);
     var image = this.getAttribute('data-image')||this.getAttribute('data-product-image')||null;
+    var rawImageData = this.getAttribute('data-image-data') || '';
+    var imageData = rawImageData ? decodeURIComponent(rawImageData) : null;
     var qty   = 1;
     var inp   = document.getElementById('quantity');
     if(inp) qty=parseInt(inp.value)||1;
-    addToCart(id,name,price,qty,image);
+    addToCart(id,name,price,qty,image,imageData);
 }
 
 // ── Product filters + sorting ─────────────────────────────────────────────────
@@ -405,5 +410,5 @@ function showNotification(message, type) {
     document.head.appendChild(s);
 })();
 
-var API_BASE_URL='https://quickserve-j4u8.onrender.com/api';
+
 function loginUser(){}function registerUser(){}function fetchProducts(){}function createOrder(){}function fetchUserOrders(){}

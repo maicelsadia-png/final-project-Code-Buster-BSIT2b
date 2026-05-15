@@ -17,7 +17,7 @@ async function loadProducts() {
     
     try {
         console.log('Fetching products from API...');
-        const response = await fetch('https://quickserve-j4u8.onrender.com/api/products');
+        const response = await fetch((window.API_BASE_URL||'http://localhost:3000/api')+'/products');
         
         if (!response.ok) {
             throw new Error('Failed to fetch products');
@@ -51,7 +51,7 @@ async function loadProducts() {
                      data-name="${product.name}">
                     <div class="product-card">
                         <div class="product-img">
-                            <img src="img/products/${product.image || 'placeholder.jpg'}" alt="${product.name}" class="img-fluid" onerror="this.src='img/products/placeholder.jpg'">
+                            <img src="${(function(p){ var base=(window.BACKEND_URL||'http://localhost:3000'); if(p.image&&p.image.startsWith('/uploads/'))return base+p.image; if(p.imageData&&p.imageData.startsWith('data:'))return p.imageData; if(p.image&&p.image!=='placeholder.jpg')return base+'/img/products/'+p.image; return base+'/img/products/placeholder.jpg'; })(product)}" alt="${product.name}" class="img-fluid" onerror="this.src=(window.BACKEND_URL||'http://localhost:3000')+'/img/products/placeholder.jpg'">
                         </div>
                         <div class="product-body">
                             <h5>${escapeHtml(product.name)}</h5>

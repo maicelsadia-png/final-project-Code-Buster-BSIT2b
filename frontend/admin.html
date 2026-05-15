@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickServe | Admin Dashboard</title>
+    <title>Crumbelle | Admin Dashboard</title>
     
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -25,7 +25,7 @@
         <div class="container">
             <a class="navbar-brand" href="admin.html">
                 <i class="fas fa-mug-hot me-2"></i>
-                <span>QuickServe Admin</span>
+                <span>Crumbelle Admin</span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -335,7 +335,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-4">
-                    <h5><i class="fas fa-mug-hot me-2"></i>QuickServe Admin</h5>
+                    <h5><i class="fas fa-mug-hot me-2"></i>Crumbelle Admin</h5>
                     <p>Fast. Smooth. Effortless ordering experience. Serving happiness with every order.</p>
                 </div>
                 <div class="col-md-2">
@@ -354,13 +354,13 @@
                 <div class="col-md-3">
                     <h5>Contact Us</h5>
                     <ul>
-                        <li><i class="fas fa-envelope me-2"></i> support@quickserve.com</li>
+                        <li><i class="fas fa-envelope me-2"></i> support@crumbelle.com</li>
                         <li><i class="fas fa-phone me-2"></i> +63 2 1234 5678</li>
                     </ul>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 QuickServe Ordering System. All rights reserved.</p>
+                <p>&copy; 2026 Crumbelle Ordering System. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -369,6 +369,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Custom JS -->
+    <script src="js/config.js"></script>
     <script src="js/app.js"></script>
     <script src="js/auth-guard.js"></script>
     
@@ -418,7 +419,7 @@
         async function loadProducts() {
             const tbody = document.getElementById('productList');
             try {
-                const res = await fetch('https://quickserve-j4u8.onrender.com/api/products', { headers: adminHeaders() });
+                const res = await fetch('http://localhost:3000/api/products', { headers: adminHeaders() });
                 const products = await res.json();
                 if (products.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="6" class="text-center">No products found</td></tr>';
@@ -427,7 +428,7 @@
                 tbody.innerHTML = products.map(p => `
                     <tr data-id="${p._id}">
                         <td>${p._id.slice(-6)}</td>
-                        <td><img src="${p.image && p.image.startsWith('/uploads/') ? 'https://quickserve-j4u8.onrender.com' + p.image : (p.imageData ? p.imageData : 'img/products/' + (p.image || 'placeholder.jpg'))}" class="admin-product-img" style="width:50px;height:50px;object-fit:cover;border-radius:6px;" onerror="this.src='img/products/placeholder.jpg'"></td>
+                        <td><img src="${(function(p){ var base=(window.BACKEND_URL||'http://localhost:3000'); if(p.image&&p.image.startsWith('/uploads/'))return base+p.image; if(p.imageData&&p.imageData.startsWith('data:'))return p.imageData; if(p.image&&p.image!=='placeholder.jpg')return base+'/img/products/'+p.image; return base+'/img/products/placeholder.jpg'; })(p)}" class="admin-product-img" style="width:50px;height:50px;object-fit:cover;border-radius:6px;" onerror="this.onerror=null;this.src=(window.BACKEND_URL||'http://localhost:3000')+'/img/products/placeholder.jpg'"></td>
                         <td>${escapeHtml(p.name)}</td>
                         <td>₱${p.price.toFixed(2)}</td>
                         <td>${new Date(p.createdAt).toLocaleDateString()}</td>
@@ -444,7 +445,7 @@
 
         async function editProduct(id) {
             try {
-                const res = await fetch(`https://quickserve-j4u8.onrender.com/api/products/${id}`, { headers: adminHeaders() });
+                const res = await fetch(`http://localhost:3000/api/products/${id}`, { headers: adminHeaders() });
                 const p = await res.json();
                 document.getElementById('editProductId').value = p._id;
                 document.getElementById('editProductName').value = p.name;
@@ -464,11 +465,19 @@
             try {
                 // Upload new image if a file was selected
                 let imagePath = document.getElementById('editProductImage').value || 'placeholder.jpg';
+                let imageData = undefined; // undefined = don't change existing imageData
                 const editImageFile = document.getElementById('editProductImageFile');
                 if (editImageFile && editImageFile.files && editImageFile.files[0]) {
+                    const file = editImageFile.files[0];
+                    // Convert to base64 for persistent storage
+                    imageData = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = e => resolve(e.target.result);
+                        reader.readAsDataURL(file);
+                    });
                     const formData = new FormData();
-                    formData.append('image', editImageFile.files[0]);
-                    const uploadRes = await fetch('https://quickserve-j4u8.onrender.com/api/products/upload-image', {
+                    formData.append('image', file);
+                    const uploadRes = await fetch('http://localhost:3000/api/products/upload-image', {
                         method: 'POST',
                         headers: (() => {
                             const h = {};
@@ -491,9 +500,9 @@
                     description: document.getElementById('editProductDesc').value,
                     stock: parseInt(document.getElementById('editProductStock').value),
                     image: imagePath,
-                    imageData: null
+                    ...(imageData !== undefined && { imageData })
                 };
-                const res = await fetch(`https://quickserve-j4u8.onrender.com/api/products/${id}`, {
+                const res = await fetch(`http://localhost:3000/api/products/${id}`, {
                     method: 'PUT',
                     headers: adminHeaders(),
                     body: JSON.stringify(data)
@@ -526,11 +535,19 @@
             try {
                 // Step 1: Upload image to backend if a file was selected
                 let imagePath = 'placeholder.jpg';
+                let imageData = null;
                 const imageFileInput = document.getElementById('productImageFile');
                 if (imageFileInput && imageFileInput.files && imageFileInput.files[0]) {
+                    const file = imageFileInput.files[0];
+                    // Convert to base64 for persistent storage (survives server restarts)
+                    imageData = await new Promise((resolve) => {
+                        const reader = new FileReader();
+                        reader.onload = e => resolve(e.target.result);
+                        reader.readAsDataURL(file);
+                    });
                     const formData = new FormData();
-                    formData.append('image', imageFileInput.files[0]);
-                    const uploadRes = await fetch('https://quickserve-j4u8.onrender.com/api/products/upload-image', {
+                    formData.append('image', file);
+                    const uploadRes = await fetch('http://localhost:3000/api/products/upload-image', {
                         method: 'POST',
                         headers: (() => {
                             const h = {};
@@ -547,10 +564,10 @@
                     imagePath = uploadResult.imagePath; // e.g. /uploads/product-123.jpg
                 }
 
-                // Step 2: Save product with backend image path (no base64)
-                const data = { name, price, description: desc, stock, image: imagePath, imageData: null, category, available };
+                // Step 2: Save product with both backend image path AND base64 fallback
+                const data = { name, price, description: desc, stock, image: imagePath, imageData: imageData, category, available };
 
-                const res = await fetch('https://quickserve-j4u8.onrender.com/api/products', {
+                const res = await fetch('http://localhost:3000/api/products', {
                     method: 'POST',
                     headers: adminHeaders(),
                     body: JSON.stringify(data)
@@ -574,7 +591,7 @@
         async function loadOrders() {
             var tbody = document.getElementById('ordersList');
             try {
-                var res = await fetch('https://quickserve-j4u8.onrender.com/api/orders', { headers: adminHeaders() });
+                var res = await fetch('http://localhost:3000/api/orders', { headers: adminHeaders() });
                 if (!res.ok) throw new Error('HTTP ' + res.status + ': ' + res.statusText);
                 var allOrders = await res.json();
 
@@ -657,7 +674,7 @@
         async function deleteOrder(id) {
             if (!confirm('Are you sure you want to delete this order? This cannot be undone.')) return;
             try {
-                const res = await fetch(`https://quickserve-j4u8.onrender.com/api/orders/${id}/archive`, {
+                const res = await fetch(`http://localhost:3000/api/orders/${id}/archive`, {
                     method: 'PUT',
                     headers: adminHeaders()
                 });
@@ -696,7 +713,7 @@
             const id = document.getElementById('updateOrderId').value;
             const status = document.getElementById('orderStatus').value;
             try {
-                await fetch(`https://quickserve-j4u8.onrender.com/api/orders/${id}/status`, {
+                await fetch(`http://localhost:3000/api/orders/${id}/status`, {
                     method: 'PUT',
                     headers: adminHeaders(),
                     body: JSON.stringify({ status })
@@ -715,7 +732,7 @@
         async function loadReviews() {
             const tbody = document.getElementById('reviewsList');
             try {
-                const res = await fetch('https://quickserve-j4u8.onrender.com/api/reviews', { headers: adminHeaders() });
+                const res = await fetch('http://localhost:3000/api/reviews', { headers: adminHeaders() });
                 const reviews = await res.json();
                 if (reviews.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="7" class="text-center">No reviews found</td></tr>';
@@ -745,7 +762,7 @@
         async function loadUsers() {
             const tbody = document.getElementById('usersList');
             try {
-                const res = await fetch('https://quickserve-j4u8.onrender.com/api/users', { headers: adminHeaders() });
+                const res = await fetch('http://localhost:3000/api/users', { headers: adminHeaders() });
                 const users = await res.json();
                 if (users.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="6" class="text-center">No users found</td></tr>';
@@ -780,9 +797,9 @@
         document.getElementById('confirmDeleteBtn')?.addEventListener('click', async function() {
             if (!currentDeleteId) return;
             let url = '';
-            if (currentDeleteType === 'product') url = `https://quickserve-j4u8.onrender.com/api/products/${currentDeleteId}`;
-            else if (currentDeleteType === 'review') url = `https://quickserve-j4u8.onrender.com/api/reviews/${currentDeleteId}`;
-            else if (currentDeleteType === 'user') url = `https://quickserve-j4u8.onrender.com/api/users/${currentDeleteId}`;
+            if (currentDeleteType === 'product') url = `http://localhost:3000/api/products/${currentDeleteId}`;
+            else if (currentDeleteType === 'review') url = `http://localhost:3000/api/reviews/${currentDeleteId}`;
+            else if (currentDeleteType === 'user') url = `http://localhost:3000/api/users/${currentDeleteId}`;
             
             try {
                 const res = await fetch(url, { method: 'DELETE', headers: adminHeaders() });

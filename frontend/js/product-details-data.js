@@ -1,19 +1,23 @@
 // product-details-data.js - Fetch and display single product details
 
-var BACKEND_URL = 'https://quickserve-j4u8.onrender.com';
 
-// Resolve product image to a public URL
+
+// Resolve product image to an absolute public URL
 function getProductImageSrc(product) {
+    var base = (window.BACKEND_URL || 'http://localhost:3000');
     if (product.image && product.image.startsWith('/uploads/')) {
-        return BACKEND_URL + product.image;
+        return base + product.image;
+    }
+    if (product.image && (product.image.startsWith('http://') || product.image.startsWith('https://'))) {
+        return product.image;
     }
     if (product.imageData && product.imageData.startsWith('data:')) {
         return product.imageData;
     }
     if (product.image && product.image !== 'placeholder.jpg') {
-        return 'img/products/' + product.image;
+        return base + '/img/products/' + product.image;
     }
-    return 'img/products/placeholder.jpg';
+    return base + '/img/products/placeholder.jpg';
 }
 
 
@@ -46,7 +50,7 @@ async function loadProductDetails() {
         const product = await response.json();
         
         // Update page title
-        document.title = `QuickServe | ${product.name}`;
+        document.title = `Crumbelle | ${product.name}`;
         
         // Update breadcrumb
         const breadcrumb = document.getElementById('breadcrumbProductName');
@@ -57,7 +61,7 @@ async function loadProductDetails() {
             <div class="row">
                 <div class="col-lg-6 mb-4">
                     <div class="product-main-image">
-                        <img src="${getProductImageSrc(product)}" onerror="this.src='img/products/placeholder.jpg'" alt="${product.name}" class="img-fluid">
+                        <img src="${getProductImageSrc(product)}" onerror="this.onerror=null;this.src=(window.BACKEND_URL||'http://localhost:3000')+'/img/products/placeholder.jpg'" alt="${product.name}" class="img-fluid">
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -81,7 +85,7 @@ async function loadProductDetails() {
                                 data-product-id="${product._id}" 
                                 data-product-name="${product.name}" 
                                 data-product-price="${product.price}"
-                                data-image="${getProductImageSrc(product)}">
+                                data-image="${product.image || ''}"
                             <i class="fas fa-cart-plus me-2"></i>Add to Cart
                         </button>
                         <div class="product-meta mt-4">
@@ -98,10 +102,6 @@ async function loadProductDetails() {
         if (typeof initAddToCartButtons === 'function') {
             initAddToCartButtons();
         }
-        
-        // Update hidden form fields for review
-        const productIdReview = document.getElementById('productIdReview');
-        if (productIdReview) productIdReview.value = product._id;
         
         console.log('✅ Product details loaded successfully');
         
@@ -198,7 +198,7 @@ async function loadRelatedProducts() {
                 <div class="col-md-3">
                     <div class="product-card">
                         <div class="product-img">
-                            <img src="${getProductImageSrc(product)}" onerror="this.src='img/products/placeholder.jpg'" alt="${product.name}" class="img-fluid">
+                            <img src="${getProductImageSrc(product)}" onerror="this.onerror=null;this.src=(window.BACKEND_URL||'http://localhost:3000')+'/img/products/placeholder.jpg'" alt="${product.name}" class="img-fluid">
                         </div>
                         <div class="product-body">
                             <h5>${product.name}</h5>

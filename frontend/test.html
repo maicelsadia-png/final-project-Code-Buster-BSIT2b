@@ -8,7 +8,7 @@
     <div id="result">Loading...</div>
     
     <script>
-        fetch('https://quickserve-j4u8.onrender.com/api/products')
+        fetch('http://localhost:3000/api/products')
             .then(response => response.json())
             .then(data => {
                 document.getElementById('result').innerHTML = `
